@@ -31,6 +31,7 @@ import { VerifyEmailComponent } from './components/verify-email/verify-email.com
     AngularFireStorageModule,
     AngularFireDatabaseModule,
     AppRoutingModule,
+    BrowserModule
   ],
   providers: [],
   bootstrap: [AppComponent]
