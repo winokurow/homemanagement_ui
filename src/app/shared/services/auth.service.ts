@@ -6,11 +6,17 @@ import {
 } from '@angular/fire/compat/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
+import {BehaviorSubject} from "rxjs";
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+
   userData: any; // Save logged in user data
+
+  private loggedIn = new BehaviorSubject<boolean>(this.verifyIfLoggedIn);
+
+
   constructor(
     public afs: AngularFirestore, // Inject Firestore service
     public afAuth: AngularFireAuth, // Inject Firebase auth service
@@ -23,12 +29,25 @@ export class AuthService {
         this.userData = user;
         localStorage.setItem('user', JSON.stringify(this.userData));
         JSON.parse(localStorage.getItem('user')!);
+        this.loggedIn.next(true);
       } else {
         localStorage.setItem('user', 'null');
         JSON.parse(localStorage.getItem('user')!);
+        this.loggedIn.next(false);
       }
     });
   }
+
+  get isLoggedIn() {
+    return this.loggedIn;
+  }
+
+  // Returns true when user is looged in and email is verified
+  get verifyIfLoggedIn(): boolean {
+    const user = JSON.parse(localStorage.getItem('user')!);
+    return user !== null && user.emailVerified !== false;
+  }
+
   // Sign in with email/password
   SignIn(email: string, password: string) {
     return this.afAuth
@@ -80,11 +99,7 @@ export class AuthService {
         window.alert(error.message);
       });
   }
-  // Returns true when user is looged in and email is verified
-  get isLoggedIn(): boolean {
-    const user = JSON.parse(localStorage.getItem('user')!);
-    return user !== null && user.emailVerified !== false;
-  }
+
   /* Setting up user data when sign in with username/password,
   sign up with username/password and sign in with social auth
   provider in Firestore database using AngularFirestore + AngularFirestoreDocument service */

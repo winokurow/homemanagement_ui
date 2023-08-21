@@ -14,6 +14,10 @@ import { SignInComponent } from './components/sign-in/sign-in.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
+import {AppMaterialModule} from "./app-material.module";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {ReactiveFormsModule} from "@angular/forms";
+import {HeaderComponent} from "./components/header/header.component";
 
 @NgModule({
   declarations: [
@@ -22,7 +26,8 @@ import { VerifyEmailComponent } from './components/verify-email/verify-email.com
     SignInComponent,
     SignUpComponent,
     ForgotPasswordComponent,
-    VerifyEmailComponent
+    VerifyEmailComponent,
+    HeaderComponent
   ],
   imports: [
     AngularFireModule.initializeApp(environment.firebase),
@@ -31,9 +36,15 @@ import { VerifyEmailComponent } from './components/verify-email/verify-email.com
     AngularFireStorageModule,
     AngularFireDatabaseModule,
     AppRoutingModule,
-    BrowserModule
+    BrowserModule,
+    AppMaterialModule,
+    ReactiveFormsModule,
+    BrowserAnimationsModule
   ],
   providers: [],
+  exports: [
+    HeaderComponent
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
