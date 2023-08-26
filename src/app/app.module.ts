@@ -14,10 +14,19 @@ import { SignInComponent } from './components/sign-in/sign-in.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
-import {AppMaterialModule} from "./app-material.module";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ReactiveFormsModule} from "@angular/forms";
 import {HeaderComponent} from "./components/header/header.component";
+import {MatToolbarModule} from "@angular/material/toolbar";
+import {MatCardModule} from "@angular/material/card";
+import {MatInputModule} from "@angular/material/input";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatButtonModule} from "@angular/material/button";
+import { AddEventTemplateComponent } from './components/add-event-template/add-event-template.component';
+import { EditEventTemplateComponent } from './components/edit-event-template/edit-event-template.component';
+import { EventTemplateListComponent } from './components/event-template-list/event-template-list.component';
+import {ToastrModule} from "ngx-toastr";
+import {NgxPaginationModule} from "ngx-pagination";
 
 @NgModule({
   declarations: [
@@ -27,7 +36,10 @@ import {HeaderComponent} from "./components/header/header.component";
     SignUpComponent,
     ForgotPasswordComponent,
     VerifyEmailComponent,
-    HeaderComponent
+    HeaderComponent,
+    AddEventTemplateComponent,
+    EditEventTemplateComponent,
+    EventTemplateListComponent
   ],
   imports: [
     AngularFireModule.initializeApp(environment.firebase),
@@ -37,9 +49,15 @@ import {HeaderComponent} from "./components/header/header.component";
     AngularFireDatabaseModule,
     AppRoutingModule,
     BrowserModule,
-    AppMaterialModule,
     ReactiveFormsModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatToolbarModule,
+    MatCardModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatButtonModule,
+    ToastrModule.forRoot(),
+    NgxPaginationModule
   ],
   providers: [],
   exports: [

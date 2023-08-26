@@ -1,0 +1,59 @@
+<div class="pt-3 pb-2 mb-3 border-bottom">
+  <h2 class="h2">Add EventTemplate</h2>
+</div>
+<form [formGroup]="eventTemplateForm" (ngSubmit)="submitEventTemplateData()" novalidate>
+  <div class="row">
+    <div class="col-lg-5 col-md-12 col-sm-12">
+      <div class="row">
+        <div class="col-md-12 mb-3">
+          <label>Name</label>
+          <input
+            type="text"
+            formControlName="name"
+            class="form-control"
+            required
+          />
+          <!-- errors-->
+          <p *ngIf="name.touched && name.invalid" class="error">
+            <sup>*</sup>Please enter atleast first name
+          </p>
+          <p *ngIf="name.errors?.['minlength']" class="error">
+            <sup>*</sup>Name shouldn't be less than 2 words
+          </p>
+        </div>
+        <div class="col-md-12 mb-3">
+          <label>Weight</label>
+          <input type="text" formControlName="weight" class="form-control" />
+        </div>
+        <div class="col-md-12 mb-3">
+          <label>Duration</label>
+          <input type="text" formControlName="duration" class="form-control" />
+        </div>
+        <div class="col-md-12 mb-3">
+          <label>Categories</label>
+          <input type="text" formControlName="categories" class="form-control" />
+        </div>
+        <div class="col-md-12 mb-3">
+          <label>Post Processing</label>
+          <input type="text" formControlName="postProcessing" class="form-control" />
+        </div>
+      </div>
+      <div class="form-group text-right">
+        <button
+          type="button"
+          class="btn btn-secondary gap-right"
+          (click)="ResetForm()"
+        >
+          Reset
+        </button>
+        <button
+          type="submit"
+          class="btn btn-success"
+          [disabled]="!eventTemplateForm.valid"
+        >
+          Add EventTemplate
+        </button>
+      </div>
+    </div>
+  </div>
+</form>
