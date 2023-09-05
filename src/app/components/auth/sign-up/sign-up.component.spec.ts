@@ -3,7 +3,7 @@ import { SignUpComponent } from './sign-up.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { By } from '@angular/platform-browser';
-import {AuthService} from "../../shared/services/auth.service";
+import {AuthService} from "../../../shared/services/auth.service";
 import {Router, UrlTree} from "@angular/router";
 
 describe('SignUpComponent', () => {

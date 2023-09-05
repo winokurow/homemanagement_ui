@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { VerifyEmailComponent } from './verify-email.component';
 import { By } from '@angular/platform-browser';
-import {AuthService} from "../../shared/services/auth.service";
+import {AuthService} from "../../../shared/services/auth.service";
 import {Router, UrlTree} from "@angular/router";
 import {RouterTestingModule} from "@angular/router/testing";
 

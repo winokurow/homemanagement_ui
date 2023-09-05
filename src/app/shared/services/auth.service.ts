@@ -36,6 +36,7 @@ export class AuthService {
         this.loggedIn.next(false);
       }
     });
+    this.userData = JSON.parse(localStorage.getItem('user')!);
   }
 
   get isLoggedIn() {

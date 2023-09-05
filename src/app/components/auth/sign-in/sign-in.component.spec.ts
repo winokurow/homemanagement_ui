@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SignInComponent } from './sign-in.component';
-import { AuthService } from '../../shared/services/auth.service';
+import { AuthService } from '../../../shared/services/auth.service';
 import { By } from '@angular/platform-browser';
 import {Router, UrlTree} from "@angular/router";
 import {RouterTestingModule} from "@angular/router/testing";

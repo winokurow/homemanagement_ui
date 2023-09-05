@@ -1,0 +1,45 @@
+<div class="container-xl">
+  <div class="table-responsive">
+    <div class="table-wrapper">
+      <div class="table-title">
+        <div class="row">
+          <div class="col-sm-6">
+            <h4><b>Manage EventTemplates</b></h4>
+          </div>
+          <div class="col-sm-6">
+            <button class="btn btn-success" (click)="AddEventTemplate()">
+              <i class='fas fa-plus-circle'></i><span> ADD</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <table class="table table-striped table-hover table-bordered table-content">
+        <thead>
+        <tr class="center-align">
+          <th>Name</th>
+          <th>Weight</th>
+          <th>Duration</th>
+          <th>Categories</th>
+          <th>PostProcessing</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let eventTemplate of eventTemplateList" class="center-align">
+          <td>{{ eventTemplate.name }}</td>
+          <td>{{ eventTemplate.weight }}</td>
+          <td>{{ eventTemplate.duration }}</td>
+          <td>{{ eventTemplate.categories }}</td>
+          <td>{{ eventTemplate.postProcessing }}</td>
+          <td>
+            <a href="#" [routerLink]="['/edit-event-template/', eventTemplate.id]" class="btn"><i class="fa fa-edit edit"></i></a>
+            <button type="button" (click)="deleteEventTemplateConfirmation(eventTemplate)" class="btn"><i class='fas fa-trash-alt delete'></i></button>
+          </td>
+        </tr>
+        <tr>
+          <td *ngIf="eventTemplateList.length == 0" colspan="6">No EventTemplate Found</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { CommonModule } from "@angular/common";
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -10,23 +11,28 @@ import {AngularFireStorageModule} from "@angular/fire/compat/storage";
 import {AngularFireDatabaseModule} from "@angular/fire/compat/database";
 import {environment} from "../environments/environment";
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { SignInComponent } from './components/sign-in/sign-in.component';
-import { SignUpComponent } from './components/sign-up/sign-up.component';
-import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
-import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
+import { SignInComponent } from './components/auth/sign-in/sign-in.component';
+import { SignUpComponent } from './components/auth/sign-up/sign-up.component';
+import { ForgotPasswordComponent } from './components/auth/forgot-password/forgot-password.component';
+import { VerifyEmailComponent } from './components/auth/verify-email/verify-email.component';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {HeaderComponent} from "./components/header/header.component";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatCardModule} from "@angular/material/card";
 import {MatInputModule} from "@angular/material/input";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatButtonModule} from "@angular/material/button";
-import { AddEventTemplateComponent } from './components/add-event-template/add-event-template.component';
-import { EditEventTemplateComponent } from './components/edit-event-template/edit-event-template.component';
-import { EventTemplateListComponent } from './components/event-template-list/event-template-list.component';
+import { AddEventTemplateComponent } from './components/event-template/add-event-template/add-event-template.component';
+import { EditEventTemplateComponent } from './components/event-template/edit-event-template/edit-event-template.component';
+import {
+  EventTemplateListComponent,
+  NgModalConfirm
+} from './components/event-template/event-template-list/event-template-list.component';
 import {ToastrModule} from "ngx-toastr";
 import {NgxPaginationModule} from "ngx-pagination";
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { CategoriesListComponent } from './shared/categories-list/categories-list.component';
 
 @NgModule({
   declarations: [
@@ -39,10 +45,13 @@ import {NgxPaginationModule} from "ngx-pagination";
     HeaderComponent,
     AddEventTemplateComponent,
     EditEventTemplateComponent,
-    EventTemplateListComponent
+    EventTemplateListComponent,
+    NgModalConfirm,
+    CategoriesListComponent
   ],
   imports: [
     AngularFireModule.initializeApp(environment.firebase),
+    CommonModule,
     AngularFireAuthModule,
     AngularFirestoreModule,
     AngularFireStorageModule,
@@ -57,7 +66,9 @@ import {NgxPaginationModule} from "ngx-pagination";
     MatFormFieldModule,
     MatButtonModule,
     ToastrModule.forRoot(),
-    NgxPaginationModule
+    NgxPaginationModule,
+    NgbModule,
+    FormsModule
   ],
   providers: [],
   exports: [
