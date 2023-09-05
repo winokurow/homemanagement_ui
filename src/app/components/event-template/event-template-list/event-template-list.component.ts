@@ -1,12 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {EventTemplateService} from "../../../shared/event-template.service";
 import {ToastrService} from "ngx-toastr";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Route, Router} from "@angular/router";
 import {NgbActiveModal, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {Type} from "ng-mocks";
 import {map} from "rxjs/operators";
 import {EventTemplate} from "../../../shared/event-template";
-import {getMatIconFailedToSanitizeUrlError} from "@angular/material/icon";
+import {Category} from "../../../shared/category";
 
 @Component({
   selector: 'ng-modal-confirm',
@@ -41,15 +41,23 @@ const MODALS: { [name: string]: Type<any> } = {
 export class EventTemplateListComponent implements OnInit {
 
   closeResult = '';
+  selectCategoryOptions = Object.keys(Category);
+  selectedCategory: string = '';
   eventTemplateList: EventTemplate[] = [];
-  constructor(private router: Router, private modalService: NgbModal,
-              private toastr: ToastrService, private eventTemplateService: EventTemplateService) { }
+  constructor(private router: Router, private route: ActivatedRoute, private modalService: NgbModal,
+              private toastr: ToastrService, private eventTemplateService: EventTemplateService) {
+    if (this.route.snapshot.params['category']) {
+      this.selectedCategory = this.route.snapshot.params['category'];
+    } else {
+      this.selectedCategory = "";
+    }
+  }
 
   ngOnInit(): void {
     this.getAllEventTemplate();
   }
   async getAllEventTemplate() {
-    this.eventTemplateService.getAll().snapshotChanges().pipe(
+    this.eventTemplateService.getAll(this.selectedCategory).snapshotChanges().pipe(
       map(changes =>
         changes.map(c =>
           ({ id: c.payload.doc.id, ...c.payload.doc.data() })
@@ -57,12 +65,23 @@ export class EventTemplateListComponent implements OnInit {
       )
     ).subscribe(data => {
       console.log(data)
+
+      data = data.sort((a, b) => {
+        console.log(a.order)
+        console.log('number' in a)
+        console.log('number' in b)
+        const aHas = typeof a.order !== 'undefined';
+        const bHas = typeof b.order !== 'undefined';
+        return aHas ? bHas ? b.order - a.order : 1 : -1
+        }
+      );
+      console.log(data)
       this.eventTemplateList = data;
     });
   }
 
   AddEventTemplate() {
-    this.router.navigate(['add-event-template']);
+    this.router.navigate(['add-event-template/', this.selectedCategory]);
   }
 
   deleteEventTemplateConfirmation(eventTemplate: any) {
@@ -79,6 +98,10 @@ export class EventTemplateListComponent implements OnInit {
     this.eventTemplateService.delete(eventTemplate.id).then((success) => {
       this.toastr.success("Deleted");
     })
+  }
+
+  changeCategory() {
+    this.getAllEventTemplate();
   }
 }
 

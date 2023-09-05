@@ -7,13 +7,22 @@
             <h4><b>Update EventTemplate</b></h4>
           </div>
           <div class="col-sm-6">
-            <a href="#" routerLink="/event-template" class="btn btn-success back"><i class='fas fa-arrow-circle-left'></i>
+            <a href="#" routerLink="/event-template/{{this.editEventTemplateForm.category}}" class="btn btn-success back"><i class='fas fa-arrow-circle-left'></i>
               Back</a>
           </div>
         </div>
       </div>
       <form #eventTemplateForm="ngForm">
         <div class="table-content">
+          <div class="form-group p-10 row">
+            <div class="col-sm-3">
+              <label for="Order" class="p-t-b-10">Order</label>
+            </div>
+            <div class="col-sm-9">
+              <input type="number" class="form-control" id="order" required
+                     [(ngModel)]="editEventTemplateForm.order" name="Order">
+            </div>
+          </div>
           <div class="form-group p-10 row">
             <div class="col-sm-3">
               <label for="Name" class="p-t-b-10">Name<span class="requiredStar">*</span></label>

@@ -16,7 +16,8 @@ export class EditEventTemplateComponent  implements OnInit {
   eventTemplateForm!: NgForm;
 
   isSubmitted: boolean = false;
-  eventTemplateId: any;
+
+  eventTemplateId: string;
 
   constructor(private toastr: ToastrService, private route: ActivatedRoute, private router: Router,
      private eventTemplateService: EventTemplateService) { }
@@ -28,41 +29,41 @@ export class EditEventTemplateComponent  implements OnInit {
   getEventTemplateDetailById() {
     this.eventTemplateService.get(this.eventTemplateId)
     .subscribe((data: any) => {
-            this.editEventTemplateForm.name = data.data().name;
-            this.editEventTemplateForm.weight = data.data().weight;
-            this.editEventTemplateForm.duration = data.data().duration;
-            this.editEventTemplateForm.categories = data.data().categories;
-            this.editEventTemplateForm.postProcessing = data.data().postProcessing;
+      this.editEventTemplateForm.order = data.data().order;
+      this.editEventTemplateForm.name = data.data().name;
+      this.editEventTemplateForm.category = data.data().category;
+      this.editEventTemplateForm.weight = data.data().weight;
+      this.editEventTemplateForm.duration = data.data().duration;
+      this.editEventTemplateForm.categories = data.data().categories;
+      this.editEventTemplateForm.postProcessing = data.data().postProcessing;
       },
       (error: any) => { });
   }
 
   EditEventTemplate(isValid: any) {
-    console.log(isValid)
-    console.log(this.isSubmitted)
     this.isSubmitted = true;
     if (isValid) {
 
       const eventTemplate = this.editEventTemplateForm
       //eventTemplate.id = this.eventTemplateId
-      console.log(this.eventTemplateId)
-      console.log(eventTemplate)
       this.eventTemplateService.update(this.eventTemplateId, eventTemplate).then((success) => {
         this.toastr.success('success');
         setTimeout(() => {
-          this.router.navigate(['event-template']);
+          this.router.navigate(['event-template', this.editEventTemplateForm.category]);
         }, 500);
       })
         .catch(error => {
           console.log(error);
-          this.router.navigate(['event-template']);
+          this.router.navigate(['event-template', this.editEventTemplateForm.category]);
         });
     }
   }
 }
 
 export class eventTemplateForm {
+  order: number = 0;
   name: string = "";
+  category: string = "";
   weight: number = 0;
   duration: number = 0;
   categories: string = "";

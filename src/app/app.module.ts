@@ -33,6 +33,7 @@ import {ToastrModule} from "ngx-toastr";
 import {NgxPaginationModule} from "ngx-pagination";
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CategoriesListComponent } from './shared/categories-list/categories-list.component';
+import { DaysListComponent } from './components/days/days-list/days-list.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { CategoriesListComponent } from './shared/categories-list/categories-lis
     EditEventTemplateComponent,
     EventTemplateListComponent,
     NgModalConfirm,
-    CategoriesListComponent
+    CategoriesListComponent,
+    DaysListComponent
   ],
   imports: [
     AngularFireModule.initializeApp(environment.firebase),

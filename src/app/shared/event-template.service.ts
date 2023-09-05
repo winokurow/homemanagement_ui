@@ -19,8 +19,14 @@ export class EventTemplateService {
     this.eventTemplateRef = this.db.collection<EventTemplate>(this.dbPath);
   }
 
-  getAll(): AngularFirestoreCollection<EventTemplate> {
-    return this.db.collection<EventTemplate>(this.dbPath, ref => ref.where('userId', '==', this.authService.userData.uid));
+  getAll(category: String): AngularFirestoreCollection<EventTemplate> {
+    if (category != '') {
+      return this.db.collection<EventTemplate>(this.dbPath, ref =>
+        ref.where('userId', '==', this.authService.userData.uid).where('category', '==', category));
+    } else {
+      return this.db.collection<EventTemplate>(this.dbPath, ref =>
+        ref.where('userId', '==', this.authService.userData.uid));
+    }
   }
 
   get(id:string):  Observable<DocumentSnapshot<EventTemplate>> {
@@ -29,19 +35,19 @@ export class EventTemplateService {
 
   create(eventTemplate: EventTemplate): any {
     eventTemplate.userId = this.authService.userData.uid;
-    console.log('eventTemplate')
-    console.log(eventTemplate)
     return this.eventTemplateRef.add({ ...eventTemplate });
   }
 
   update(id: string, eventTemplate: EventTemplate): Promise<void> {
     const data = {
       id: id,
+      order: eventTemplate.order,
       name: eventTemplate.name,
       duration: eventTemplate.duration,
       weight: eventTemplate.weight,
       categories: eventTemplate.categories,
       postProcessing: eventTemplate.postProcessing,
+      category: eventTemplate.category,
     };
     return this.eventTemplateRef.doc(id).update(data);
   }

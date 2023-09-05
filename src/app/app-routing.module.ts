@@ -16,8 +16,9 @@ export const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: 'planer', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: 'event-template', component: EventTemplateListComponent, canActivate: [AuthGuard] },
+  { path: 'event-template/:category', component: EventTemplateListComponent, canActivate: [AuthGuard] },
   { path: 'edit-event-template/:id', component: EditEventTemplateComponent, canActivate: [AuthGuard] },
-  { path: 'add-event-template', component: AddEventTemplateComponent },
+  { path: 'add-event-template/:category', component: AddEventTemplateComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'verify-email-address', component: VerifyEmailComponent },
 ];

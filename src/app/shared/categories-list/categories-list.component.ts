@@ -1,4 +1,4 @@
-import {Component, forwardRef, OnChanges, OnInit, SimpleChange} from '@angular/core';
+import {Component, forwardRef} from '@angular/core';
 import {Category} from "../category";
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
 
