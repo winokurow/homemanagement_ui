@@ -16,7 +16,7 @@ export class EventTemplateService {
   eventTemplateRef: AngularFirestoreCollection<EventTemplate>;
 
   constructor(private db: AngularFirestore, private authService: AuthService) {
-    this.db.collection<EventTemplate>(this.dbPath);
+    this.eventTemplateRef = this.db.collection<EventTemplate>(this.dbPath);
   }
 
   getAll(): AngularFirestoreCollection<EventTemplate> {

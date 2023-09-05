@@ -61,13 +61,7 @@
               <label for="Categories" class="p-t-b-10">Categories<span class="requiredStar">*</span></label>
             </div>
             <div class="col-sm-9">
-              <input type="text" class="form-control" id="Categories" required maxlength="255"
-                     [(ngModel)]="addEventTemplateForm.categories" name="Categories" #categories="ngModel">
-              <div *ngIf="categories.errors && isSubmitted" class="alert alert-danger validationError">
-                <div [hidden]="!categories.errors?.['required']">
-                  Categories is required
-                </div>
-              </div>
+              <app-categories-list [(ngModel)]="addEventTemplateForm.categories" name="Categories"  id="Categories"></app-categories-list>
             </div>
           </div>
           <div class="form-group p-10 row">

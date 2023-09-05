@@ -24,7 +24,9 @@ export class AddEventTemplateComponent {
 
   AddEventTemplate(isValid: any) {
     this.isSubmitted = true;
+
     if (isValid) {
+      console.log(this.addEventTemplateForm);
       this.eventTemplateService.create(this.addEventTemplateForm).then((success) => {
         this.toastr.success('success');
         setTimeout(() => {

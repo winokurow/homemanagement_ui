@@ -58,16 +58,10 @@
           </div>
           <div class="form-group p-10 row">
             <div class="col-sm-3">
-              <label class="p-t-b-10">Categories<span class="requiredStar">*</span></label>
+              <label for="Categories" class="p-t-b-10">Categories<span class="requiredStar">*</span></label>
             </div>
             <div class="col-sm-9">
-              <input type="text" class="form-control" id="Categories" required maxlength="255"
-                     [(ngModel)]="editEventTemplateForm.categories" name="Categories" #Categories="ngModel">
-              <div *ngIf="Categories.errors && isSubmitted" class="alert alert-danger validationError">
-                <div [hidden]="!Categories.errors?.['required']">
-                  Categories is required
-                </div>
-              </div>
+              <app-categories-list [(ngModel)]="editEventTemplateForm.categories" name="Categories"  id="Categories"></app-categories-list>
             </div>
           </div>
           <div class="form-group p-10 row">
@@ -75,8 +69,7 @@
               <label class="p-t-b-10">postProcessing</label>
             </div>
             <div class="col-sm-9">
-              <textarea class="form-control" id="PostProcessing" required [(ngModel)]="editEventTemplateForm.postProcessing" name="PostProcessing"
-                        #PostProcessing="ngModel">></textarea>
+              <textarea class="form-control" id="PostProcessing" [(ngModel)]="editEventTemplateForm.postProcessing" name="PostProcessing">></textarea>
             </div>
           </div>
         <div class="table-footer">

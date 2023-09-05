@@ -1,5 +1,3 @@
-import {Duration} from "duration-converter";
-import {WeightObject} from "./weight-object";
 
 export interface EventTemplate {
   id?: string;

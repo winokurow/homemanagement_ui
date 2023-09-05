@@ -1,1 +1,6 @@
-<p>categories-list works!</p>
+<div *ngFor="let option of enumOptions">
+  <label>{{ option }}</label>
+  <input type="number" [attr.name]="option"  [(ngModel)]="enumValues[option]" [disabled]="disabled" (ngModelChange)="onChanges()">
+</div>
+
+

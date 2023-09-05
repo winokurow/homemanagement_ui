@@ -1,10 +1,8 @@
-import {Component, OnInit, AfterViewInit, ViewChild} from '@angular/core';
-import {FormGroup, FormBuilder, Validators, NgForm} from '@angular/forms';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {NgForm} from '@angular/forms';
 import {EventTemplateService} from "../../../shared/event-template.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ToastrService} from "ngx-toastr";
-import { Location } from '@angular/common';
-import {EventTemplate} from "../../../shared/event-template";
 
 @Component({
   selector: 'app-edit-event-template',
@@ -40,6 +38,8 @@ export class EditEventTemplateComponent  implements OnInit {
   }
 
   EditEventTemplate(isValid: any) {
+    console.log(isValid)
+    console.log(this.isSubmitted)
     this.isSubmitted = true;
     if (isValid) {
 
