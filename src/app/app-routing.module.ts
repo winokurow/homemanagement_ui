@@ -9,6 +9,11 @@ import {AuthGuard} from "./shared/guard/auth.guard";
 import {EventTemplateListComponent} from "./components/event-template/event-template-list/event-template-list.component";
 import {EditEventTemplateComponent} from "./components/event-template/edit-event-template/edit-event-template.component";
 import {AddEventTemplateComponent} from "./components/event-template/add-event-template/add-event-template.component";
+import {DaysListComponent} from "./components/days/days-list/days-list.component";
+import {DayEventListComponent} from "./components/days/day-event-template-list/day-event-list.component";
+import {AddEventComponent} from "./components/days/add-event/add-event.component";
+import {EditEventComponent} from "./components/days/edit-event/edit-event.component";
+
 export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   { path: 'sign-in', component: SignInComponent },
@@ -18,7 +23,11 @@ export const routes: Routes = [
   { path: 'event-template', component: EventTemplateListComponent, canActivate: [AuthGuard] },
   { path: 'event-template/:category', component: EventTemplateListComponent, canActivate: [AuthGuard] },
   { path: 'edit-event-template/:id', component: EditEventTemplateComponent, canActivate: [AuthGuard] },
-  { path: 'add-event-template/:category', component: AddEventTemplateComponent },
+  { path: 'edit-event/:id', component: EditEventComponent, canActivate: [AuthGuard] },
+  { path: 'add-event-template/:category', component: AddEventTemplateComponent, canActivate: [AuthGuard] },
+  { path: 'days', component: DaysListComponent, canActivate: [AuthGuard] },
+  { path: 'days/:day/events', component: DayEventListComponent, canActivate: [AuthGuard] },
+  { path: 'days/:day/events/add/type/:type', component: AddEventComponent, canActivate: [AuthGuard] },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'verify-email-address', component: VerifyEmailComponent },
 ];

@@ -1,1 +1,33 @@
-<p>days-list works!</p>
+<div class="container-xl">
+  <div>
+    <div class="table-wrapper">
+      <div class="table-title">
+        <div class="row">
+          <div class="col-sm-6">
+            <h4><b>Manage Days</b></h4>
+          </div>
+          <div class="col-sm-6">
+            <input type="date" [valueAsDate]="newDayDate" (change)="newDayDate = $event.target.valueAsDate" />
+            <button class="btn btn-success" (click)="addDay()">
+              <i class='fas fa-plus-circle'></i><span> ADD</span>
+            </button>
+          </div>
+        </div>
+        <ul>
+        </ul>
+  </div>
+      <div class="container">
+        <div  class="row">
+            <div class="list-group">
+              <div class="list-group-item clearfix" *ngFor="let day of days | keyvalue" >
+                <span class="mr-5">{{day.value.day.toDate() | date:'dd.MM' }}</span>
+                <a class="btn btn-link btn-rounded btn-sm" role="button" [routerLink]="'/days/' + day.value.id + '/events'">Show Events</a>
+                <a class="btn btn-link btn-rounded btn-sm" role="button">Generate</a>
+                <a class="btn btn-link btn-rounded btn-sm" role="button">Show</a>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

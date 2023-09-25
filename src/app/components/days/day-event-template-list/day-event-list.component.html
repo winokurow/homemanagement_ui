@@ -1,0 +1,48 @@
+<div class="container-xl">
+  <div class="table-responsive">
+    <div class="table-wrapper">
+      <div class="table-title">
+        <div class="row">
+          <div class="col-sm-6">
+            <h4><b>Manage Events</b></h4>
+          </div>
+          <div class="col-sm-6">
+            <button class="btn btn-success me-3" (click)="addMandatoryEvent()">
+              <i class='fas fa-plus-circle'></i><span> Add Mandatory</span>
+            </button>
+            <button class="btn btn-success" (click)="addOptionalEvent()">
+              <i class='fas fa-plus-circle'></i><span> Add Optional</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <table class="table table-striped table-hover table-bordered table-content">
+        <thead>
+        <tr class="center-align">
+          <th>Start Time</th>
+          <th>End Time</th>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Categories</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let event of eventList" class="center-align">
+          <td>{{ event.startTime }}</td>
+          <td>{{ event.endTime }}</td>
+          <td>{{ event.name }}</td>
+          <td>{{ event.type }}</td>
+          <td>{{ event.categories }}</td>
+          <td>
+            <a href="#" [routerLink]="['/edit-event/', event.id]" class="btn"><i class="fa fa-edit edit"></i></a>
+            <button type="button" (click)="deleteEventConfirmation(event)" class="btn"><i class='fas fa-trash-alt delete'></i></button>
+          </td>
+        </tr>
+        <tr>
+          <td *ngIf="eventList.length == 0" colspan="6">No EventTemplate Found</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

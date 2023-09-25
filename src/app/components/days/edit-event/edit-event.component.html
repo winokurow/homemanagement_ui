@@ -1,0 +1,72 @@
+<div class="container-xl">
+  <div class="table-responsive">
+    <div class="table-wrapper">
+      <div class="table-title">
+        <div class="row">
+          <div class="col-sm-6">
+            <h4><b>Update Event</b></h4>
+          </div>
+          <div class="col-sm-6">
+            <a href="#" routerLink="/day/{{this.editEventForm.day}}" class="btn btn-success back"><i class='fas fa-arrow-circle-left'></i>
+              Back</a>
+          </div>
+        </div>
+      </div>
+      <form #eventForm="ngForm">
+        <div class="table-content">
+          <div class="form-group p-10 row">
+            <div class="col-sm-3">
+              <label for="Name" class="p-t-b-10">Name<span class="requiredStar">*</span></label>
+            </div>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="Name" required maxlength="255"
+                     [(ngModel)]="editEventForm.name" name="FirstName" #name="ngModel">
+              <div *ngIf="name.errors && isSubmitted" class="alert alert-danger validationError">
+                <div [hidden]="!name.errors?.['required']">
+                  Name is required
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group p-10 row">
+            <div class="col-sm-3">
+              <label for="startTime" class="p-t-b-10">Start Time<span class="requiredStar">*</span></label>
+            </div>
+            <div class="col-sm-9">
+              <input id="startTime" type="time" [(ngModel)]="editEventForm.startTime" name="startTime" #startTime="ngModel" />
+              <div *ngIf="startTime.errors && isSubmitted" class="alert alert-danger validationError">
+                <div [hidden]="!startTime.errors?.['required']">
+                  Start Time is required
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group p-10 row">
+            <div class="col-sm-3">
+              <label for="endTime" class="p-t-b-10">End Time<span class="requiredStar">*</span></label>
+            </div>
+            <div class="col-sm-9">
+              <input id="endTime" type="time" [(ngModel)]="editEventForm.endTime" name="endTime" #endTime="ngModel" />
+              <div *ngIf="endTime.errors && isSubmitted" class="alert alert-danger validationError">
+                <div [hidden]="!endTime.errors?.['required']">
+                  End Time is required
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group p-10 row">
+            <div class="col-sm-3">
+              <label for="Categories" class="p-t-b-10">Categories<span class="requiredStar">*</span></label>
+            </div>
+            <div class="col-sm-9">
+              <app-categories-list [(ngModel)]="editEventForm.categories" name="Categories"  id="Categories"></app-categories-list>
+            </div>
+          </div>
+        </div>
+        <div class="table-footer">
+          <button class="btn btn-success" (click)="editEvent(eventForm.form.valid)">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {EventTemplateService} from "../../../shared/event-template.service";
 import {ToastrService} from "ngx-toastr";
-import {ActivatedRoute, Route, Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {NgbActiveModal, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {Type} from "ng-mocks";
 import {map} from "rxjs/operators";
@@ -67,9 +67,6 @@ export class EventTemplateListComponent implements OnInit {
       console.log(data)
 
       data = data.sort((a, b) => {
-        console.log(a.order)
-        console.log('number' in a)
-        console.log('number' in b)
         const aHas = typeof a.order !== 'undefined';
         const bHas = typeof b.order !== 'undefined';
         return aHas ? bHas ? b.order - a.order : 1 : -1
