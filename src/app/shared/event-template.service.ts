@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {EventTemplate} from "./event-template"
-import {AngularFirestore, AngularFirestoreCollection} from '@angular/fire/compat/firestore';
+import {AngularFirestore, AngularFirestoreCollection, DocumentReference} from '@angular/fire/compat/firestore';
 import {AuthService} from "./services/auth.service";
-import {BehaviorSubject, Observable} from "rxjs";
+import {Observable} from "rxjs";
 import firebase from "firebase/compat";
 import DocumentSnapshot = firebase.firestore.DocumentSnapshot;
 
@@ -22,7 +22,7 @@ export class EventTemplateService {
   getAll(category: String): AngularFirestoreCollection<EventTemplate> {
     if (category != '') {
       return this.db.collection<EventTemplate>(this.dbPath, ref =>
-        ref.where('userId', '==', this.authService.userData.uid).where('category', '==', category));
+        ref.where('userId', '==', this.authService.userData.uid).where('category', '==', category.toLowerCase()));
     } else {
       return this.db.collection<EventTemplate>(this.dbPath, ref =>
         ref.where('userId', '==', this.authService.userData.uid));
@@ -33,8 +33,13 @@ export class EventTemplateService {
     return this.db.collection<EventTemplate>(this.dbPath, ref => ref.where('userId', '==', this.authService.userData.uid)).doc(id).get();
   }
 
-  create(eventTemplate: EventTemplate): any {
+
+  create(eventTemplate: EventTemplate): Promise<DocumentReference<EventTemplate>> {
+    console.log('Saving');
+
     eventTemplate.userId = this.authService.userData.uid;
+    console.log(eventTemplate);
+    eventTemplate.category = eventTemplate.category.toLowerCase();
     return this.eventTemplateRef.add({ ...eventTemplate });
   }
 
@@ -46,7 +51,7 @@ export class EventTemplateService {
       duration: eventTemplate.duration,
       weight: eventTemplate.weight,
       categories: eventTemplate.categories,
-      postProcessing: eventTemplate.postProcessing,
+      postProcessing: eventTemplate.postprocess,
       category: eventTemplate.category,
     };
     return this.eventTemplateRef.doc(id).update(data);

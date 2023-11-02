@@ -7,10 +7,14 @@
             <h4><b>Manage Days</b></h4>
           </div>
           <div class="col-sm-6">
-            <input type="date" [valueAsDate]="newDayDate" (change)="newDayDate = $event.target.valueAsDate" />
-            <button class="btn btn-success" (click)="addDay()">
-              <i class='fas fa-plus-circle'></i><span> ADD</span>
+            <div class="btn-toolbar">
+            <button class="btn btn-success me-3" (click)="addDays()">
+              <i class='fas fa-plus-circle'></i><span> Add Days</span>
             </button>
+              <button class="btn btn-success me-3" (click)="addEvents()">
+                <i class='fas fa-plus-circle'></i><span> Add Events</span>
+              </button>
+              </div>
           </div>
         </div>
         <ul>
@@ -19,14 +23,39 @@
       <div class="container">
         <div  class="row">
             <div class="list-group">
-              <div class="list-group-item clearfix" *ngFor="let day of days | keyvalue" >
-                <span class="mr-5">{{day.value.day.toDate() | date:'dd.MM' }}</span>
-                <a class="btn btn-link btn-rounded btn-sm" role="button" [routerLink]="'/days/' + day.value.id + '/events'">Show Events</a>
-                <a class="btn btn-link btn-rounded btn-sm" role="button">Generate</a>
-                <a class="btn btn-link btn-rounded btn-sm" role="button">Show</a>
+              <div class="list-group-item clearfix" *ngFor="let day of days  | slice:0:19;" [ngStyle]="{ 'background-color': stateColors[day.state] }">
+                <span class="mr-5">{{day.day.toDate() | date:' EEEE dd.MM' }}</span>
+                <a class="btn btn-link btn-rounded btn-sm" role="button" [routerLink]="'/days/' + day.id + '/events'">Show Events</a>
+                <a class="btn btn-link btn-rounded btn-sm" role="button" (click)="generate(day)">Generate</a>
+                <a class="btn btn-link btn-rounded btn-sm" role="button" (click)="show(day)">Show</a>
+                <a class="btn btn-link btn-rounded btn-sm" role="button" (click)="delete(day)">Delete</a>
               </div>
             </div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="modal"
+  tabindex="-1"
+  role="dialog"
+  [ngStyle]="{'display':displayStyle}">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Day Plan</h4>
+      </div>
+      <div class="modal-body">
+        <div  class="list-group-item clearfix" *ngFor="let event of events"  >
+          {{event.startTime.toDate() | date:'shortTime' }} - {{event.endTime.toDate()| date:'shortTime' }} {{event.name}}
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger"
+                (click)="closePopup()">
+          Close
+        </button>
       </div>
     </div>
   </div>

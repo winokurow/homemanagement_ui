@@ -7,6 +7,7 @@ import {NgModalConfirm} from "../../event-template/event-template-list/event-tem
 import {EventService} from "../../../shared/event.service";
 import {map} from "rxjs/operators";
 import {DayEvent} from "../../../shared/event";
+import firebase from "firebase/compat";
 
 
 const MODALS: { [name: string]: Type<any> } = {
@@ -20,9 +21,6 @@ const MODALS: { [name: string]: Type<any> } = {
 })
 export class DayEventListComponent implements OnInit {
 
-  closeResult = '';
-  selectCategoryOptions = ['', 'Mandatory', 'Optional'];
-  selectedCategory = '';
   dayId: string;
   eventList: DayEvent[] = [];
 
@@ -42,7 +40,6 @@ export class DayEventListComponent implements OnInit {
           )
         )
       ).subscribe(data => {
-        console.log(data)
         this.eventList = data;
       });
   }
@@ -70,5 +67,5 @@ export class DayEventListComponent implements OnInit {
       this.toastr.success("Deleted");
     })
   }
-}
 
+}

@@ -28,8 +28,8 @@
         </thead>
         <tbody>
         <tr *ngFor="let event of eventList" class="center-align">
-          <td>{{ event.startTime }}</td>
-          <td>{{ event.endTime }}</td>
+          <td>{{ event.startTime.toDate() | date:'EEEE H:mm'}}</td>
+          <td>{{ event.endTime.toDate() | date:'EEEE H:mm'}}</td>
           <td>{{ event.name }}</td>
           <td>{{ event.type }}</td>
           <td>{{ event.categories }}</td>

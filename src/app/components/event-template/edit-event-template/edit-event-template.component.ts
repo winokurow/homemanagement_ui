@@ -35,7 +35,7 @@ export class EditEventTemplateComponent  implements OnInit {
       this.editEventTemplateForm.weight = data.data().weight;
       this.editEventTemplateForm.duration = data.data().duration;
       this.editEventTemplateForm.categories = data.data().categories;
-      this.editEventTemplateForm.postProcessing = data.data().postProcessing;
+      this.editEventTemplateForm.postprocess = data.data().postprocess;
       },
       (error: any) => { });
   }
@@ -67,5 +67,5 @@ export class eventTemplateForm {
   weight: number = 0;
   duration: number = 0;
   categories: string = "";
-  postProcessing: string = "";
+  postprocess: string = "";
 }

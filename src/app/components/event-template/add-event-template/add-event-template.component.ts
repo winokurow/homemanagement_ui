@@ -29,6 +29,7 @@ export class AddEventTemplateComponent {
 
     if (isValid) {
       this.eventTemplateService.create(this.addEventTemplateForm).then((success) => {
+
         this.toastr.success('success');
         setTimeout(() => {
           this.router.navigate(['event-template', this.category]);
@@ -48,6 +49,6 @@ export class eventTemplateForm {
   weight: number = 0;
   duration: number = 0;
   categories: string = "";
-  postProcessing: string = "";
+  postprocess: string = "";
 }
 

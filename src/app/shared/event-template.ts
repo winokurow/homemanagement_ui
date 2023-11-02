@@ -7,7 +7,8 @@ export interface EventTemplate {
   weight: number;
   duration: number;
   categories: string;
-  postProcessing: string;
+  postprocess: string;
+  room?: string;
   category?: string;
 }
 

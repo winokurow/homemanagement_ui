@@ -69,7 +69,7 @@ export class EventTemplateListComponent implements OnInit {
       data = data.sort((a, b) => {
         const aHas = typeof a.order !== 'undefined';
         const bHas = typeof b.order !== 'undefined';
-        return aHas ? bHas ? b.order - a.order : 1 : -1
+        return aHas ? bHas ? a.order - b.order : 1 : -1
         }
       );
       console.log(data)
