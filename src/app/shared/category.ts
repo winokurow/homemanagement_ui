@@ -8,6 +8,13 @@ export const Category = {
   CLEAN: "CLEAN",
   FAMILY: "FAMILY",
   PEOPLE: "PEOPLE",
+  BOARDGAMES: "BOARDGAMES",
+  BACK: "BACK",
+  LANGUAGE: "LANGUAGE",
+  CHILD: "CHILD",
+  BONUS: "BONUS",
+  PSORIASIS: "PSORIASIS",
+  ROOMS: "ROOMS",
 } as const;
 
 

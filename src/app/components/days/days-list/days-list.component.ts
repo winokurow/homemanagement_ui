@@ -43,11 +43,11 @@ export class DaysListComponent  implements OnInit {
   }
 
   addDays() {
-    this.generatorService.generateDaysAfterToday(20);
+    this.generatorService.generateDaysAfterToday(7);
   }
 
   addEvents() {
-    this.generatorService.addEvents(20);
+    this.generatorService.addEvents(7);
   }
 
   generate(day:Day) {

@@ -90,13 +90,13 @@ export class GeneratorService {
       this.output('weighted categories:');
       this.output(weightedCategories);
 
-      let newEvent = this.findEventTemplate(day, eventTemplates, gap, weightedCategories, this.necessaryCounter);
+      let newEvent = this.findEventTemplate(day, eventTemplates, gap, weightedCategories);
       let categoriesMap = this.parseCategoriesCSV(newEvent.categories);
       weights = this.updateWeights(weights, categoriesMap);
       weightedCategories = this.getWeightedCategories(weights);
       this.output("Add event");
       this.output(newEvent);
-      if (newEvent.postprocess === 'WHOLE_DAY') {
+      if (newEvent.postprocess == 'WHOLE_DAY') {
         day.resultEvents = [];
       }
       day.resultEvents.push(newEvent);
@@ -107,7 +107,7 @@ export class GeneratorService {
 
   }
 
-  private findEventTemplate(day: Day, eventTemplates: EventTemplate[], gap: [Date, Date], weightedCategories: [string,number][], necessaryCounter: number) : DayEvent {
+  private findEventTemplate(day: Day, eventTemplates: EventTemplate[], gap: [Date, Date], weightedCategories: [string,number][]) : DayEvent {
     let duration = this.calculateDurationInMinutes(gap[0], gap[1]);
     this.output('duration:');
     this.output(duration);
@@ -116,24 +116,23 @@ export class GeneratorService {
     console.log("Try to find necessary event")
     this.output(eventTemplates);
     let filteredNecessaryEventTemplateList: EventTemplate[] = eventTemplates.filter((eventTemplates) => eventTemplates.category === Category.NECESSARY.toLowerCase());
-    this.output(filteredNecessaryEventTemplateList);
     filteredNecessaryEventTemplateList.sort((a, b) => a.order - b.order);
 
-    if (filteredNecessaryEventTemplateList[necessaryCounter].duration <= duration) {
-      let categoriesMap = this.parseCategoriesCSV(filteredNecessaryEventTemplateList[necessaryCounter].categories);
+    if (filteredNecessaryEventTemplateList[this.necessaryCounter].duration <= duration) {
+      let categoriesMap = this.parseCategoriesCSV(filteredNecessaryEventTemplateList[this.necessaryCounter].categories);
       const eventKeyValueArray = Array.from(categoriesMap);
       const eventTemplateCategories = eventKeyValueArray.map((item) => item[0]);
       this.output(weightedCategories[0][0])
       this.output(eventTemplateCategories);
       if (categoriesMap.get(weightedCategories[0][0])>0) {
         let endTime = new Date(gap[0]);
-        endTime.setMinutes(endTime.getMinutes() + filteredNecessaryEventTemplateList[necessaryCounter].duration);
+        endTime.setMinutes(endTime.getMinutes() + filteredNecessaryEventTemplateList[this.necessaryCounter].duration);
         let newEvent: DayEvent = {
-          userId: filteredNecessaryEventTemplateList[necessaryCounter].userId,
+          userId: filteredNecessaryEventTemplateList[this.necessaryCounter].userId,
           startTime: Timestamp.fromDate(new Date(gap[0])),
           endTime: Timestamp.fromDate(endTime),
-          name: filteredNecessaryEventTemplateList[necessaryCounter].name,
-          categories: filteredNecessaryEventTemplateList[necessaryCounter].categories,
+          name: filteredNecessaryEventTemplateList[this.necessaryCounter].name,
+          categories: filteredNecessaryEventTemplateList[this.necessaryCounter].categories,
           type: 'generated',
           day: day.id
         }
@@ -144,18 +143,18 @@ export class GeneratorService {
 
     const sortedEventCategories = weightedCategories.map((item) => item[0]);
     for (const category of sortedEventCategories) {
-
+      console.log("Categorie " + category);
       // Hygiene
-      if (category == Category.HYGIENE) {
-        console.log("Categorie is hygiene");
+      if (category == Category.HYGIENE || category == Category.FAMILY || category == Category.PEOPLE) {
+        console.log("category == Category.HYGIENE");
         let endTime = new Date(gap[0]);
         endTime.setMinutes(endTime.getMinutes() + 5);
         let newEvent: DayEvent = {
           userId: day.userId,
           startTime: Timestamp.fromDate(new Date(gap[0])),
           endTime: Timestamp.fromDate(endTime),
-          name: 'Гигиена',
-          categories: 'HYGIENE:5',
+          name: category,
+          categories: category + ':5',
           type: 'generated',
           day: day.id
         }
@@ -163,21 +162,26 @@ export class GeneratorService {
       }
 
       // Necessary
-      if ((category == Category.NECESSARY) && (filteredNecessaryEventTemplateList[necessaryCounter].duration <= duration) ) {
-        console.log("Categorie is neccessary");
-        let endTime = new Date(gap[0]);
-        endTime.setMinutes(endTime.getMinutes() + filteredNecessaryEventTemplateList[necessaryCounter].duration);
-        let newEvent: DayEvent = {
-          userId: filteredNecessaryEventTemplateList[necessaryCounter].userId,
-          startTime: Timestamp.fromDate(new Date(gap[0])),
-          endTime: Timestamp.fromDate(endTime),
-          name: filteredNecessaryEventTemplateList[necessaryCounter].name,
-          categories: filteredNecessaryEventTemplateList[necessaryCounter].categories,
-          type: 'generated',
-          day: day.id
+      if (category == Category.NECESSARY) {
+        if ((filteredNecessaryEventTemplateList[this.necessaryCounter].duration <= duration)) {
+          console.log("Categorie is neccessary");
+          console.log("this.necessaryCounter = " + this.necessaryCounter);
+          console.log("filteredNecessaryEventTemplateList[this.necessaryCounter] = " + filteredNecessaryEventTemplateList[this.necessaryCounter]);
+          let endTime = new Date(gap[0]);
+          endTime.setMinutes(endTime.getMinutes() + filteredNecessaryEventTemplateList[this.necessaryCounter].duration);
+          let newEvent: DayEvent = {
+            userId: filteredNecessaryEventTemplateList[this.necessaryCounter].userId,
+            startTime: Timestamp.fromDate(new Date(gap[0])),
+            endTime: Timestamp.fromDate(endTime),
+            name: filteredNecessaryEventTemplateList[this.necessaryCounter].name,
+            categories: filteredNecessaryEventTemplateList[this.necessaryCounter].categories,
+            type: 'generated',
+            day: day.id
+          }
+          this.necessaryCounter++;
+          return newEvent;
         }
-        this.necessaryCounter++;
-        return newEvent;
+        continue;
       }
 
       let newEvent = this.chooseEventTemplate(category, day, gap[0], duration, eventTemplates);
@@ -213,7 +217,7 @@ export class GeneratorService {
       .filter((eventTemplate) => eventTemplate.category === category.toLowerCase() && eventTemplate.duration <= duration);
     const totalWeight = filteredEventTemplateList
       .reduce((sum, eventTemplate) => sum + eventTemplate.weight, 0);
-
+    console.log(totalWeight)
     if (totalWeight > 0) {
       while (aggregatedDuration < 5) {
         const randomNumber = Math.floor(Math.random() * totalWeight);
@@ -317,7 +321,7 @@ export class GeneratorService {
     for (const dayDate of nextDays) {
       this.output(dayDate);
       let day = await this.dayService.getByDay(dayDate).toPromise();
-      if (day !== undefined && day !== null) {
+      if (day !== undefined && day !== null && (day.resultEvents == undefined || day.resultEvents.length == 0)) {
         let events = await this.eventService.getEventsForDate(day.id).toPromise();
         const mandatoryEvents: DayEvent[] = events.filter((event) => event.type === 'mandatory');
         const optionalEvents: DayEvent[] = events.filter((event) => event.type === 'optional');

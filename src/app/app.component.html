@@ -1,2 +1,47 @@
-<app-header></app-header>
-<router-outlet></router-outlet>
+<div style="height: 100vh;">
+<div>
+  <mat-toolbar color="primary" *ngIf="isLoggedIn$ | async">
+    <mat-toolbar-row>
+      <button mat-icon-button (click)="sidenav.toggle()" fxShow="true" fxHide.gt-sm>
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span class="fill-remaining-space"></span>
+      <div fxShow="true" fxHide.lt-md="true">
+        <button mat-button routerLink="/dashboard">Dashboard</button>
+        <button mat-button routerLink="/event-template">Event Templates</button>
+        <button mat-button routerLink="/days">Days</button>
+        <button mat-button routerLink="/event-template">Lists</button>
+        <button mat-button (click)="onLogout()">Logout</button>
+      </div>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <mat-sidenav-container fxFlexFill>
+    <mat-sidenav mode="side" (click)="sidenav.toggle()" #sidenav>
+      <mat-nav-list>
+        <mat-list-item routerLink="/dashboard">
+          <span>Dashboard</span>
+        </mat-list-item>
+        <mat-list-item routerLink="/days">
+          <span>Days</span>
+        </mat-list-item>
+        <mat-list-item routerLink="/event-template">
+          <span>Event Templates</span>
+        </mat-list-item>
+        <mat-list-item routerLink="/event-template">
+          <span>Lists</span>
+        </mat-list-item>
+        <mat-list-item (click)="onLogout()">
+          <span>Logout</span>
+        </mat-list-item>
+      </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content fxFlexFill>
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
+</div>
+
+
+

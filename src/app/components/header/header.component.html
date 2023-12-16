@@ -1,12 +1,42 @@
+<div>
 <mat-toolbar color="primary" *ngIf="isLoggedIn$ | async">
-  <span>
-  </span>
+  <mat-toolbar-row>
+  <button mat-icon-button (click)="sidenav.toggle()" fxShow="true" fxHide.gt-sm>
+    <mat-icon>menu</mat-icon>
+  </button>
   <span class="fill-remaining-space"></span>
-
-  <button mat-button routerLink="/dashboard">Dashboard</button>
-  <button mat-button routerLink="/days">Days</button>
-  <button mat-button routerLink="/event-template">Event Templates</button>
-  <button mat-button routerLink="/event-template">Lists</button>
-  <button mat-button routerLink="login">Login</button>
-  <button mat-button (click)="onLogout()">Logout</button>
+  <div fxShow="true" fxHide.lt-md="true">
+      <button mat-button routerLink="/dashboard">Dashboard</button>
+      <button mat-button routerLink="/days">Days</button>
+      <button mat-button routerLink="/event-template">Event Templates</button>
+      <button mat-button routerLink="/event-template">Lists</button>
+      <button mat-button (click)="onLogout()">Logout</button>
+    </div>
+    </mat-toolbar-row>
 </mat-toolbar>
+
+<mat-sidenav-container fxFlexFill>
+  <mat-sidenav #sidenav>
+    <mat-nav-list>
+      <mat-list-item routerLink="/dashboard">
+        <span>Dashboard</span>
+      </mat-list-item>
+      <mat-list-item routerLink="/days">
+        <span>Days</span>
+      </mat-list-item>
+      <mat-list-item routerLink="/event-template">
+        <span>Event Templates</span>
+      </mat-list-item>
+      <mat-list-item routerLink="/event-template">
+        <span>Lists</span>
+      </mat-list-item>
+      <mat-list-item routerLink="/login">
+        <span>Login</span>
+      </mat-list-item>
+      <mat-list-item (click)="onLogout()">
+        <span>Logout</span>
+      </mat-list-item>
+    </mat-nav-list>
+  </mat-sidenav>
+</mat-sidenav-container>
+</div>

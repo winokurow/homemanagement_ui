@@ -19,25 +19,28 @@
           </div>
         </div>
       </div>
+      <div class="table-responsive">
       <table class="table table-striped table-hover table-bordered table-content">
         <thead>
         <tr class="center-align">
-          <th>Order</th>
-          <th>Name</th>
-          <th>Weight</th>
-          <th>Duration</th>
-          <th>Categories</th>
-          <th>PostProcessing</th>
+          <th class="col-sm-1">Order</th>
+          <th class="col-sm-3">Name</th>
+          <th class="col-sm-1">Weight</th>
+          <th class="col-sm-1">Duration</th>
+          <th class="col-sm-2">Categories</th>
+          <th class="col-sm-3">PostProcessing</th>
+          <th class="col-sm-1"></th>
+          <th></th>
         </tr>
         </thead>
         <tbody>
         <tr *ngFor="let eventTemplate of eventTemplateList" class="center-align">
-          <td>{{ eventTemplate.order }}</td>
-          <td>{{ eventTemplate.name }}</td>
-          <td>{{ eventTemplate.weight }}</td>
-          <td>{{ eventTemplate.duration }}</td>
-          <td>{{ eventTemplate.categories }}</td>
-          <td>{{ eventTemplate.postProcessing }}</td>
+          <td class="col-sm-1">{{ eventTemplate.order }}</td>
+          <td class="col-sm-3">{{ eventTemplate.name }}</td>
+          <td class="col-sm-1">{{ eventTemplate.weight }}</td>
+          <td class="col-sm-1">{{ eventTemplate.duration }}</td>
+          <td class="col-sm-3">{{ eventTemplate.categories }}</td>
+          <td class="col-sm-3">{{eventTemplate.postprocess }}</td>
           <td>
             <a href="#" [routerLink]="['/edit-event-template/', eventTemplate.id]" class="btn"><i class="fa fa-edit edit"></i></a>
             <button type="button" (click)="deleteEventTemplateConfirmation(eventTemplate)" class="btn"><i class='fas fa-trash-alt delete'></i></button>
@@ -48,6 +51,7 @@
         </tr>
         </tbody>
       </table>
+      </div>
     </div>
   </div>
 </div>

@@ -37,6 +37,10 @@ import { DaysListComponent } from './components/days/days-list/days-list.compone
 import {DayEventListComponent} from "./components/days/day-event-template-list/day-event-list.component";
 import {AddEventComponent} from "./components/days/add-event/add-event.component";
 import {EditEventComponent} from "./components/days/edit-event/edit-event.component";
+import {MatSidenavModule} from "@angular/material/sidenav";
+import {FlexLayoutModule, FlexModule} from "@angular/flex-layout";
+import {MatIconModule} from "@angular/material/icon";
+import {MatListModule} from "@angular/material/list";
 
 @NgModule({
   declarations: [
@@ -55,7 +59,7 @@ import {EditEventComponent} from "./components/days/edit-event/edit-event.compon
     DaysListComponent,
     DayEventListComponent,
     AddEventComponent,
-    EditEventComponent
+    EditEventComponent,
   ],
   imports: [
     AngularFireModule.initializeApp(environment.firebase),
@@ -76,7 +80,12 @@ import {EditEventComponent} from "./components/days/edit-event/edit-event.compon
     ToastrModule.forRoot(),
     NgxPaginationModule,
     NgbModule,
-    FormsModule
+    FormsModule,
+    MatSidenavModule,
+    FlexLayoutModule,
+    FlexModule,
+    MatIconModule,
+    MatListModule
   ],
   providers: [],
   exports: [

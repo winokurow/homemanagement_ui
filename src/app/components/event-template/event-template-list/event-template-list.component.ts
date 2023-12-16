@@ -40,17 +40,17 @@ const MODALS: { [name: string]: Type<any> } = {
 })
 export class EventTemplateListComponent implements OnInit {
 
-  closeResult = '';
   selectCategoryOptions = Object.keys(Category);
   selectedCategory: string = '';
   eventTemplateList: EventTemplate[] = [];
   constructor(private router: Router, private route: ActivatedRoute, private modalService: NgbModal,
               private toastr: ToastrService, private eventTemplateService: EventTemplateService) {
     if (this.route.snapshot.params['category']) {
-      this.selectedCategory = this.route.snapshot.params['category'];
+      this.selectedCategory = this.route.snapshot.params['category'].toUpperCase();
     } else {
       this.selectedCategory = "";
     }
+    console.log("this.selectedCategory" + this.selectedCategory);
   }
 
   ngOnInit(): void {
