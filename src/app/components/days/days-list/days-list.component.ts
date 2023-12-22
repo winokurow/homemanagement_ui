@@ -51,7 +51,7 @@ export class DaysListComponent  implements OnInit {
   }
 
   generate(day:Day) {
-    this.generatorService.generate(day.id);
+    this.generatorService.generate(day);
   }
 
   show(day:Day) {

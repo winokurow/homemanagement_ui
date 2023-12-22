@@ -6,5 +6,6 @@ export interface Day {
   day: any;
   state: undefined|'created'|'events_inserted'|'generated';
   resultEvents: DayEvent[];
+  optionalEvents: DayEvent[];
 }
 

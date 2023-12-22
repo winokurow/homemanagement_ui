@@ -3,13 +3,13 @@ import {Day} from "./day";
 import {ToastrService} from "ngx-toastr";
 import {DayService} from "./days.service";
 import {first, map, take} from "rxjs/operators";
-import {EventService} from "./event.service";
 import {DayEvent} from "./event";
 import {Category} from "./category";
 import {categoryCoefficient} from "./category-coefficient";
 import {EventTemplateService} from "./event-template.service";
 import {EventTemplate} from "./event-template";
 import { Timestamp } from "@firebase/firestore";
+import * as uuid from 'uuid';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +19,7 @@ export class GeneratorService {
 
   private necessaryCounter = 0;
 
-  constructor(private toastr: ToastrService, private dayService: DayService, private eventService: EventService,
+  constructor(private toastr: ToastrService, private dayService: DayService,
     private eventTemplateService:EventTemplateService) {
   }
 
@@ -31,6 +31,7 @@ export class GeneratorService {
           const day: Day = {
             day: dayDate,
             state: 'created',
+            optionalEvents: [],
             resultEvents: [], // Initialize with an empty array of DayEvent
           };
 
@@ -44,13 +45,12 @@ export class GeneratorService {
     }
   }
 
-  async generate(dayId: string) {
+  async generate(day: Day) {
     this.necessaryCounter = 0;
-    let events = await this.eventService.getEventsForDate(dayId).toPromise();
+
     this.output('START GENERATION------------------');
-    this.output('result events');
-    this.output(events);
-    const day = await this.dayService.get(dayId);
+    this.output(JSON.parse(JSON.stringify(day)));
+    let optionalEvents = day.optionalEvents;
     this.output('Day Events');
     this.output(JSON.parse(JSON.stringify(day.resultEvents)));
 
@@ -60,8 +60,6 @@ export class GeneratorService {
     this.output(JSON.parse(JSON.stringify(day.resultEvents)));
     this.output(weightedCategories);
 
-
-    const optionalEvents: DayEvent[] = events.filter((event) => event.type === 'optional');
     this.output('optionalEvents');
     this.output(optionalEvents);
 
@@ -128,6 +126,7 @@ export class GeneratorService {
         let endTime = new Date(gap[0]);
         endTime.setMinutes(endTime.getMinutes() + filteredNecessaryEventTemplateList[this.necessaryCounter].duration);
         let newEvent: DayEvent = {
+          id: uuid.v4(),
           userId: filteredNecessaryEventTemplateList[this.necessaryCounter].userId,
           startTime: Timestamp.fromDate(new Date(gap[0])),
           endTime: Timestamp.fromDate(endTime),
@@ -150,6 +149,7 @@ export class GeneratorService {
         let endTime = new Date(gap[0]);
         endTime.setMinutes(endTime.getMinutes() + 5);
         let newEvent: DayEvent = {
+          id: uuid.v4(),
           userId: day.userId,
           startTime: Timestamp.fromDate(new Date(gap[0])),
           endTime: Timestamp.fromDate(endTime),
@@ -170,6 +170,7 @@ export class GeneratorService {
           let endTime = new Date(gap[0]);
           endTime.setMinutes(endTime.getMinutes() + filteredNecessaryEventTemplateList[this.necessaryCounter].duration);
           let newEvent: DayEvent = {
+            id: uuid.v4(),
             userId: filteredNecessaryEventTemplateList[this.necessaryCounter].userId,
             startTime: Timestamp.fromDate(new Date(gap[0])),
             endTime: Timestamp.fromDate(endTime),
@@ -204,6 +205,7 @@ export class GeneratorService {
   private chooseEventTemplate(category: String, day: Day, startTime: Date, duration: number, eventTemplates: EventTemplate[]) {
     let newEvent: DayEvent = {
       userId: day.userId,
+      id: uuid.v4(),
       startTime: Timestamp.fromDate(new Date(startTime)),
       endTime: Timestamp.fromDate(new Date(startTime)),
       name: '',
@@ -241,6 +243,7 @@ export class GeneratorService {
                 beginTime.setHours(7, 0);
                 let endTime = new Date(day.day.toDate());
                 endTime.setHours(21, 45);
+                newEvent.id = uuid.v4();
                 newEvent.name += eventTemplate.name;
                 newEvent.categories = eventTemplate.categories;
                 newEvent.startTime = Timestamp.fromDate(beginTime);
@@ -322,27 +325,12 @@ export class GeneratorService {
       this.output(dayDate);
       let day = await this.dayService.getByDay(dayDate).toPromise();
       if (day !== undefined && day !== null && (day.resultEvents == undefined || day.resultEvents.length == 0)) {
-        let events = await this.eventService.getEventsForDate(day.id).toPromise();
-        const mandatoryEvents: DayEvent[] = events.filter((event) => event.type === 'mandatory');
-        const optionalEvents: DayEvent[] = events.filter((event) => event.type === 'optional');
-        this.output('mandatoryEvents');
-        this.output(mandatoryEvents);
+        let optionalEvents = day.optionalEvents;
         this.output('optionalEvents');
         this.output(optionalEvents);
-        // Add Mandatory
-        for (const event of mandatoryEvents) {
-          const doesEventExist = day.resultEvents.some((resultEvent) => {
-            return resultEvent.id === event.id
-          });
-          if (!doesEventExist) {
-            // If no event with the same id exists, push the new event into the array
-            day.resultEvents.push(event);
-          }
-        }
-        await this.dayService.update(day.id, day);
 
         // Add Optional
-        if (optionalEvents.length>0) {
+        if (optionalEvents.length > 0) {
           let weights = await this.getWeights(dayDate);
           this.addOptionalEvent(day, optionalEvents, weights);
           await this.dayService.update(day.id, day);

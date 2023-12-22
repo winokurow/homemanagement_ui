@@ -1,16 +1,54 @@
 <div class="container-xl">
-  <div class="table-responsive">
+  <div class="table-responsive" *ngIf="day">
     <div class="table-wrapper">
       <div class="table-title">
         <div class="row">
           <div class="col-sm-6">
-            <h4><b>Manage Events</b></h4>
+            <h4><b>Day Events</b></h4>
           </div>
           <div class="col-sm-6">
-            <button class="btn btn-success me-3" (click)="addMandatoryEvent()">
-              <i class='fas fa-plus-circle'></i><span> Add Mandatory</span>
+            <button class="btn btn-success" (click)="addEvent()">
+              <i class='fas fa-plus-circle'></i><span>Add Event</span>
             </button>
-            <button class="btn btn-success" (click)="addOptionalEvent()">
+          </div>
+        </div>
+      </div>
+      <table class="table table-striped table-hover table-bordered table-content">
+        <thead>
+        <tr class="center-align">
+          <th>Start Time</th>
+          <th>End Time</th>
+          <th>Name</th>
+          <th>Categories</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let event of day.resultEvents" class="center-align">
+          <td>{{ event.startTime.toDate() | date:'EEEE H:mm'}}</td>
+          <td>{{ event.endTime.toDate() | date:'EEEE H:mm'}}</td>
+          <td>{{ event.name }}</td>
+          <td>{{ event.categories }}</td>
+          <td>
+            <a href="#" [routerLink]='[event.id, "edit", "mandatory"]' class="btn"><i class="fa fa-edit edit"></i></a>
+            <button type="button" (click)="deleteMandatoryEventConfirmation(event)" class="btn"><i class='fas fa-trash-alt delete'></i></button>
+          </td>
+        </tr>
+        <tr>
+          <td *ngIf="day.resultEvents.length == 0" colspan="6">No EventTemplate Found</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="table-responsive"  *ngIf="day">
+    <div class="table-wrapper">
+      <div class="table-title">
+        <div class="row">
+          <div class="col-sm-6">
+            <h4><b>Optional Events</b></h4>
+          </div>
+          <div class="col-sm-6">
+            <button class="btn btn-success me-3" (click)="addOptionalEvent()">
               <i class='fas fa-plus-circle'></i><span> Add Optional</span>
             </button>
           </div>
@@ -22,24 +60,22 @@
           <th>Start Time</th>
           <th>End Time</th>
           <th>Name</th>
-          <th>Type</th>
           <th>Categories</th>
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let event of eventList" class="center-align">
+        <tr *ngFor="let event of day.optionalEvents" class="center-align">
           <td>{{ event.startTime.toDate() | date:'EEEE H:mm'}}</td>
           <td>{{ event.endTime.toDate() | date:'EEEE H:mm'}}</td>
           <td>{{ event.name }}</td>
-          <td>{{ event.type }}</td>
           <td>{{ event.categories }}</td>
           <td>
-            <a href="#" [routerLink]="['/edit-event/', event.id]" class="btn"><i class="fa fa-edit edit"></i></a>
+            <a href="#" [routerLink]='[event.id, "edit", "optional"]' class="btn"><i class="fa fa-edit edit"></i></a>
             <button type="button" (click)="deleteEventConfirmation(event)" class="btn"><i class='fas fa-trash-alt delete'></i></button>
           </td>
         </tr>
         <tr>
-          <td *ngIf="eventList.length == 0" colspan="6">No EventTemplate Found</td>
+          <td *ngIf="day.optionalEvents  == null ||  day.optionalEvents.length == 0" colspan="6">No EventTemplate Found</td>
         </tr>
         </tbody>
       </table>

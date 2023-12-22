@@ -2,8 +2,9 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {NgForm} from '@angular/forms';
 import {ActivatedRoute, Router} from "@angular/router";
 import {ToastrService} from "ngx-toastr";
-import {EventService} from "../../../shared/event.service";
 import {DayService} from "../../../shared/days.service";
+import {Day} from "../../../shared/day";
+import {DayEvent} from "../../../shared/event";
 
 @Component({
   selector: 'app-edit-event-template',
@@ -16,62 +17,79 @@ export class EditEventComponent implements OnInit {
   @ViewChild("eventForm")
   eventForm!: NgForm;
   eventId: string;
-  day: Date;
+  type: string;
+  dayId: string;
+  day: Day;
+  dayDate: Date;
   isSubmitted: boolean = false;
 
 
   constructor(private toastr: ToastrService, private route: ActivatedRoute, private router: Router,
-              private dayService: DayService, private eventService: EventService) { }
+              private dayService: DayService) { }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.eventId = this.route.snapshot.params['id'];
+    this.dayId = this.route.snapshot.params['day'];
+    this.type = this.route.snapshot.params['type'];
+    this.day = await this.dayService.get(this.dayId);
+    this.dayDate = this.day.day.toDate();
     this.getEventById();
   }
 
-  async getDayById() {
-    console.log(this.editEventForm.day)
-    const getDay = await this.dayService.get(this.editEventForm.day);
-    this.day = getDay.day.toDate();
-  }
-
   getEventById() {
-    this.eventService.get(this.eventId)
-    .subscribe((data: any) => {
+    let dayEvent : DayEvent;
+    console.log(this.day);
+    if (this.type === 'optional') {
+      dayEvent = this.day.optionalEvents.find((event) => event.id === this.eventId);
+    } else {
+      dayEvent = this.day.resultEvents.find((event) => event.id === this.eventId);
+    }
 
-      this.editEventForm.startTime = data.data().startTime.toDate().toLocaleTimeString();
-      this.editEventForm.endTime = data.data().endTime.toDate().toLocaleTimeString();
-      this.editEventForm.day = data.data().day;
-      this.editEventForm.type = data.data().type;
-      this.editEventForm.name = data.data().name;
-      this.editEventForm.day = data.data().day;
-      this.editEventForm.categories = data.data().categories;
-      this.getDayById();
-      },
-      (error: any) => { });
+      this.editEventForm.startTime = dayEvent.startTime.toDate().toLocaleTimeString();
+      this.editEventForm.endTime = dayEvent.endTime.toDate().toLocaleTimeString();
+      this.editEventForm.day = dayEvent.day;
+      this.editEventForm.type = dayEvent.type;
+      this.editEventForm.name = dayEvent.name;
+      this.editEventForm.day = dayEvent.day;
+      this.editEventForm.categories = dayEvent.categories;
   }
 
   editEvent(isValid: any) {
     this.isSubmitted = true;
     if (isValid) {
       const eventTemplate = this.editEventForm;
-      let startDate : Date = new Date(this.day);
+      let startDate: Date = new Date(this.dayDate);
       let [hours, minutes] = (this.editEventForm.startTime as string).split(':');
       startDate.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0, 0);
-      let endDate : Date = new Date(this.day);
+      let endDate: Date = new Date(this.dayDate);
       [hours, minutes] = (this.editEventForm.endTime as string).split(':');
       endDate.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0, 0);
       eventTemplate.startTime = startDate;
       eventTemplate.endTime = endDate;
       //eventTemplate.id = this.eventTemplateId
-      this.eventService.update(this.eventId, eventTemplate).then((success) => {
-        this.toastr.success('success');
-        setTimeout(() => {
-          this.router.navigate(['days', this.editEventForm.day, 'events']);
-        }, 500);
-      })
-        .catch(error => {
-          console.log(error);
-        });
+      if (this.type == 'optional') {
+        const index = this.day.optionalEvents.findIndex(event => event.id === this.eventId);
+
+        if (index !== -1) {
+          // If the DayEvent with the given id is found, replace it with the newDayEvent
+          this.day.optionalEvents[index].startTime = eventTemplate.startTime;
+          this.day.optionalEvents[index].endTime = eventTemplate.endTime;
+          this.day.optionalEvents[index].name = eventTemplate.name;
+          this.day.optionalEvents[index].categories = eventTemplate.categories;
+        }
+      } else {
+        const index = this.day.resultEvents.findIndex(event => event.id === this.eventId);
+
+        if (index !== -1) {
+          // If the DayEvent with the given id is found, replace it with the newDayEvent
+          this.day.resultEvents[index].startTime = eventTemplate.startTime;
+          this.day.resultEvents[index].endTime = eventTemplate.endTime;
+          this.day.resultEvents[index].name = eventTemplate.name;
+          this.day.resultEvents[index].categories = eventTemplate.categories;
+        }
+      }
+      this.dayService.update(this.day.id, this.day);
+      this.router.navigate(['days', this.editEventForm.day, 'events']);
     }
   }
 }

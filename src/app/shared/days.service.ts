@@ -10,12 +10,6 @@ import {Observable} from "rxjs";
 import {Day} from "./day";
 import {map, take} from "rxjs/operators";
 import {DayEvent} from "./event";
-import firebase from "firebase/compat";
-import DocumentSnapshot = firebase.firestore.DocumentSnapshot;
-import {Action} from "@angular/fire/compat/database";
-import {doc, Firestore, getDoc, getFirestore} from "@angular/fire/firestore";
-import {initializeApp} from "firebase/app";
-import {FirebaseApp} from "@angular/fire/app";
 
 @Injectable({
   providedIn: 'root'
@@ -23,9 +17,6 @@ import {FirebaseApp} from "@angular/fire/app";
 export class DayService {
 
   private dbPath = '/days';
-  private firestoreFirebase;
-
-
 
   dayRef: AngularFirestoreCollection<Day>;
 
@@ -68,8 +59,10 @@ export class DayService {
       id: id,
       day: day.day,
       state: day.state,
-      resultEvents: day.resultEvents
+      resultEvents: day.resultEvents,
+      optionalEvents: day.optionalEvents
     };
+    console.log('Update date with id ' + id + ' with values ' + day)
     return this.dayRef.doc(id).update(data);
   }
 

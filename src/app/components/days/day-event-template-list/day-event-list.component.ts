@@ -4,10 +4,8 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {Type} from "ng-mocks";
 import {NgModalConfirm} from "../../event-template/event-template-list/event-template-list.component";
-import {EventService} from "../../../shared/event.service";
-import {map} from "rxjs/operators";
-import {DayEvent} from "../../../shared/event";
-import firebase from "firebase/compat";
+import {DayService} from "../../../shared/days.service";
+import {Day} from "../../../shared/day";
 
 
 const MODALS: { [name: string]: Type<any> } = {
@@ -22,29 +20,23 @@ const MODALS: { [name: string]: Type<any> } = {
 export class DayEventListComponent implements OnInit {
 
   dayId: string;
-  eventList: DayEvent[] = [];
+  day:Day;
 
   constructor(private router: Router, private route: ActivatedRoute, private modalService: NgbModal,
-              private toastr: ToastrService, private eventService: EventService) {
+              private toastr: ToastrService, private dayService: DayService) {
+
   }
 
   ngOnInit(): void {
     this.dayId = this.route.snapshot.params['day'];
-    this.getAllEvents();
-  }
-  async getAllEvents() {
-    this.eventService.getAll(this.dayId).snapshotChanges().pipe(
-        map(changes =>
-          changes.map(c =>
-            ({ id: c.payload.doc.id, ...c.payload.doc.data() })
-          )
-        )
-      ).subscribe(data => {
-        this.eventList = data;
-      });
+    this.getDay();
   }
 
-  addMandatoryEvent() {
+  async getDay() {
+    this.day = await this.dayService.get(this.dayId);
+    console.log(this.day);
+  }
+  addEvent() {
     this.router.navigate(['days', this.dayId, 'events', 'add', 'type', 'mandatory']);
   }
 
@@ -57,15 +49,29 @@ export class DayEventListComponent implements OnInit {
       {
         ariaLabelledBy: 'modal-basic-title'
       }).result.then((result) => {
-        this.deleteEvent(event);
+        this.deleteOptionalEvent(event);
       },
       (reason) => {});
   }
 
-  deleteEvent(event: any) {
-    this.eventService.delete(event.id).then((success) => {
-      this.toastr.success("Deleted");
-    })
+  deleteOptionalEvent(event: any) {
+    this.day.optionalEvents = this.day.optionalEvents.filter(event => !event.id);
+    this.dayService.update(this.day.id, this.day);
+  }
+
+  deleteMandatoryEventConfirmation(event: any) {
+    this.modalService.open(MODALS['deleteModal'],
+      {
+        ariaLabelledBy: 'modal-basic-title'
+      }).result.then((result) => {
+        this.deleteMandatoryEvent(event);
+      },
+      (reason) => {});
+  }
+
+  deleteMandatoryEvent(event: any) {
+    this.day.resultEvents = this.day.resultEvents.filter(event => !event.id);
+    this.dayService.update(this.day.id, this.day);
   }
 
 }

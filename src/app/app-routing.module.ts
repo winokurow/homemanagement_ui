@@ -23,7 +23,7 @@ export const routes: Routes = [
   { path: 'event-template', component: EventTemplateListComponent, canActivate: [AuthGuard] },
   { path: 'event-template/:category', component: EventTemplateListComponent, canActivate: [AuthGuard] },
   { path: 'edit-event-template/:id', component: EditEventTemplateComponent, canActivate: [AuthGuard] },
-  { path: 'edit-event/:id', component: EditEventComponent, canActivate: [AuthGuard] },
+  { path: 'days/:day/events/:id/edit/:type', component: EditEventComponent, canActivate: [AuthGuard] },
   { path: 'add-event-template/:category', component: AddEventTemplateComponent, canActivate: [AuthGuard] },
   { path: 'days', component: DaysListComponent, canActivate: [AuthGuard] },
   { path: 'days/:day/events', component: DayEventListComponent, canActivate: [AuthGuard] },
