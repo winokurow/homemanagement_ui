@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {EventTemplate} from "./event-template"
+import {EventTemplate} from "./model/event-template"
 import {AngularFirestore, AngularFirestoreCollection, DocumentReference} from '@angular/fire/compat/firestore';
 import {AuthService} from "./services/auth.service";
 import {Observable} from "rxjs";

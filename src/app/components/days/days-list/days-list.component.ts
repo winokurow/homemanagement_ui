@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {ToastrService} from "ngx-toastr";
-import {Day} from "../../../shared/day";
+import {Day} from "../../../shared/model/day";
 import {DayService} from "../../../shared/days.service";
 import {map} from "rxjs/operators";
 import {GeneratorService} from "../../../shared/plan-generator.service";
-import {DayEvent} from "../../../shared/event";
+import {DayEvent} from "../../../shared/model/event";
 
 @Component({
   selector: 'app-days-list',

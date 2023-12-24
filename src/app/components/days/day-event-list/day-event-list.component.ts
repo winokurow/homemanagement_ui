@@ -5,7 +5,7 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {Type} from "ng-mocks";
 import {NgModalConfirm} from "../../event-template/event-template-list/event-template-list.component";
 import {DayService} from "../../../shared/days.service";
-import {Day} from "../../../shared/day";
+import {Day} from "../../../shared/model/day";
 
 
 const MODALS: { [name: string]: Type<any> } = {
@@ -54,8 +54,8 @@ export class DayEventListComponent implements OnInit {
       (reason) => {});
   }
 
-  deleteOptionalEvent(event: any) {
-    this.day.optionalEvents = this.day.optionalEvents.filter(event => !event.id);
+  deleteOptionalEvent(eventToDelete: any) {
+    this.day.optionalEvents = this.day.optionalEvents.filter(event => eventToDelete.id != event.id);
     this.dayService.update(this.day.id, this.day);
   }
 
@@ -69,8 +69,10 @@ export class DayEventListComponent implements OnInit {
       (reason) => {});
   }
 
-  deleteMandatoryEvent(event: any) {
-    this.day.resultEvents = this.day.resultEvents.filter(event => !event.id);
+  deleteMandatoryEvent(eventToDelete: any) {
+    let result = this.day.resultEvents.filter(event => eventToDelete.id != event.id);
+    console.log(result);
+    this.day.resultEvents = result;
     this.dayService.update(this.day.id, this.day);
   }
 

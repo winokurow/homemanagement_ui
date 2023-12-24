@@ -5,7 +5,7 @@ import {
   QuerySnapshot
 } from '@angular/fire/compat/firestore';
 import {AuthService} from "./services/auth.service";
-import {DayEvent} from "./event";
+import {DayEvent} from "./model/event";
 import {Observable} from "rxjs";
 import firebase from "firebase/compat";
 import DocumentSnapshot = firebase.firestore.DocumentSnapshot;

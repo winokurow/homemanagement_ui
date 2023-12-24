@@ -10,7 +10,7 @@ import {EventTemplateListComponent} from "./components/event-template/event-temp
 import {EditEventTemplateComponent} from "./components/event-template/edit-event-template/edit-event-template.component";
 import {AddEventTemplateComponent} from "./components/event-template/add-event-template/add-event-template.component";
 import {DaysListComponent} from "./components/days/days-list/days-list.component";
-import {DayEventListComponent} from "./components/days/day-event-template-list/day-event-list.component";
+import {DayEventListComponent} from "./components/days/day-event-list/day-event-list.component";
 import {AddEventComponent} from "./components/days/add-event/add-event.component";
 import {EditEventComponent} from "./components/days/edit-event/edit-event.component";
 

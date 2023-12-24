@@ -3,7 +3,7 @@ import {EventTemplateService} from "../../../shared/event-template.service";
 import {ToastrService} from "ngx-toastr";
 import {NgForm } from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
-import {EventTemplate} from "../../../shared/event-template";
+import {EventTemplate} from "../../../shared/model/event-template";
 
 @Component({
   selector: 'app-add-event-template',

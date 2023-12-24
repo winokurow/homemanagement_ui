@@ -8,13 +8,10 @@
           </div>
           <div class="col-sm-6">
             <div class="btn-toolbar">
-            <button class="btn btn-success me-3" (click)="addDays()">
-              <i class='fas fa-plus-circle'></i><span> Add Days</span>
-            </button>
-              <button class="btn btn-success me-3" (click)="addEvents()">
-                <i class='fas fa-plus-circle'></i><span> Add Events</span>
-              </button>
-              </div>
+                <button class="btn btn-success me-3" (click)="addDays()">
+                  <i class='fas fa-plus-circle'></i><span> Add Days</span>
+                </button>
+            </div>
           </div>
         </div>
         <ul>
@@ -25,7 +22,7 @@
             <div class="list-group">
               <div class="list-group-item clearfix" *ngFor="let day of days  | slice:0:21;" [ngStyle]="{ 'background-color': stateColors[day.state] }">
                 <span class="mr-5">{{day.day.toDate() | date:' EEEE dd.MM' }}</span>
-                <a class="btn btn-link btn-rounded btn-sm" role="button" [routerLink]="'/days/' + day.id + '/events'">Show Events</a>
+                <a class="btn btn-link btn-rounded btn-sm" role="button" [routerLink]="'/days/' + day.id + '/events'">Events</a>
                 <a class="btn btn-link btn-rounded btn-sm" role="button" (click)="generate(day)">Generate</a>
                 <a class="btn btn-link btn-rounded btn-sm" role="button" (click)="show(day)">Show</a>
                 <a class="btn btn-link btn-rounded btn-sm" role="button" (click)="delete(day)">Delete</a>

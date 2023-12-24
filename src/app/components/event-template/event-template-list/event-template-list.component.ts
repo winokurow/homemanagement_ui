@@ -5,7 +5,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {NgbActiveModal, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {Type} from "ng-mocks";
 import {map} from "rxjs/operators";
-import {EventTemplate} from "../../../shared/event-template";
+import {EventTemplate} from "../../../shared/model/event-template";
 import {Category} from "../../../shared/category";
 
 @Component({

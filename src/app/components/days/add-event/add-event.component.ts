@@ -1,11 +1,12 @@
 import {Component, ViewChild} from '@angular/core';
 import {NgForm } from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
-import {DayEvent} from "../../../shared/event";
+import {DayEvent} from "../../../shared/model/event";
 import {ToastrService} from "ngx-toastr";
 import {DayService} from "../../../shared/days.service";
-import {Day} from "../../../shared/day";
+import {Day} from "../../../shared/model/day";
 import * as uuid from 'uuid';
+import {GeneratorService} from "../../../shared/plan-generator.service";
 
 @Component({
   selector: 'app-add-event',
@@ -26,7 +27,8 @@ export class AddEventComponent {
   type: string;
 
 
-  constructor(private router: Router, private route: ActivatedRoute, private dayService: DayService, private toastr: ToastrService) {
+  constructor(private router: Router, private route: ActivatedRoute, private dayService: DayService, private toastr: ToastrService,
+              private generatorService: GeneratorService) {
     this.dayId = this.route.snapshot.params['day'];
     this.type = this.route.snapshot.params['type'];
     this.getDayById();
@@ -67,13 +69,16 @@ export class AddEventComponent {
           this.day.optionalEvents = [];
         }
         this.day.optionalEvents.push(event);
+        this.dayService.update(this.dayId, this.day);
+        this.generatorService.addEvents(7);
       } else {
         if (!this.day.optionalEvents) {
           this.day.optionalEvents = [];
         }
         this.day.resultEvents.push(event);
+        this.dayService.update(this.dayId, this.day);
       }
-      this.dayService.update(this.dayId, this.day);
+
       setTimeout(() => {
         this.router.navigate(['days', this.dayId, 'events']);
       }, 500);

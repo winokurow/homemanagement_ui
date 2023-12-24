@@ -34,7 +34,7 @@ import {NgxPaginationModule} from "ngx-pagination";
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CategoriesListComponent } from './shared/categories-list/categories-list.component';
 import { DaysListComponent } from './components/days/days-list/days-list.component';
-import {DayEventListComponent} from "./components/days/day-event-template-list/day-event-list.component";
+import {DayEventListComponent} from "./components/days/day-event-list/day-event-list.component";
 import {AddEventComponent} from "./components/days/add-event/add-event.component";
 import {EditEventComponent} from "./components/days/edit-event/edit-event.component";
 import {MatSidenavModule} from "@angular/material/sidenav";

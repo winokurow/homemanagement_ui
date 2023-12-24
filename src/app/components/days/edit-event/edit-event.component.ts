@@ -3,8 +3,8 @@ import {NgForm} from '@angular/forms';
 import {ActivatedRoute, Router} from "@angular/router";
 import {ToastrService} from "ngx-toastr";
 import {DayService} from "../../../shared/days.service";
-import {Day} from "../../../shared/day";
-import {DayEvent} from "../../../shared/event";
+import {Day} from "../../../shared/model/day";
+import {DayEvent} from "../../../shared/model/event";
 
 @Component({
   selector: 'app-edit-event-template',
@@ -45,8 +45,8 @@ export class EditEventComponent implements OnInit {
       dayEvent = this.day.resultEvents.find((event) => event.id === this.eventId);
     }
 
-      this.editEventForm.startTime = dayEvent.startTime.toDate().toLocaleTimeString();
-      this.editEventForm.endTime = dayEvent.endTime.toDate().toLocaleTimeString();
+      this.editEventForm.startTime = dayEvent.startTime.toDate().toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'});
+      this.editEventForm.endTime = dayEvent.endTime.toDate().toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'});
       this.editEventForm.day = dayEvent.day;
       this.editEventForm.type = dayEvent.type;
       this.editEventForm.name = dayEvent.name;

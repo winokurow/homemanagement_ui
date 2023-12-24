@@ -2,14 +2,14 @@ import {Injectable} from '@angular/core';
 import {
   AngularFirestore,
   AngularFirestoreCollection,
-  DocumentData,
+  DocumentData, DocumentReference,
   QuerySnapshot
 } from '@angular/fire/compat/firestore';
 import {AuthService} from "./services/auth.service";
-import {Observable} from "rxjs";
-import {Day} from "./day";
+import {from, Observable} from "rxjs";
+import {Day} from "./model/day";
 import {map, take} from "rxjs/operators";
-import {DayEvent} from "./event";
+import {DayEvent} from "./model/event";
 
 @Injectable({
   providedIn: 'root'
@@ -49,7 +49,7 @@ export class DayService {
       );
   }
 
-  create(day: Day): any {
+  create(day: Day): Promise<DocumentReference<Day>> {
     day.userId = this.authService.userData.uid;
     return this.dayRef.add({ ...day });
   }

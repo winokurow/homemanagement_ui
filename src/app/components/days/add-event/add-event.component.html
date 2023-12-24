@@ -3,7 +3,8 @@
     <div class="table-wrapper">
       <div class="table-title">
         <div class="row">
-          <div class="col-sm-6">
+          <div class="col-sm-6" *ngIf="day">
+              <h3><b>{{day.day.toDate() | date:'EEEE, d MMMM'}}</b></h3>
             <h4><b>New Event</b></h4>
           </div>
         </div>

@@ -4,7 +4,7 @@ export interface Day {
   id?: string;
   userId?: string;
   day: any;
-  state: undefined|'created'|'events_inserted'|'generated';
+  state?: any;
   resultEvents: DayEvent[];
   optionalEvents: DayEvent[];
 }
