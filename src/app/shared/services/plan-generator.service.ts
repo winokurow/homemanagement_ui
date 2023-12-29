@@ -1,17 +1,16 @@
 import {Injectable} from '@angular/core';
-import {Day} from "./model/day";
+import {Day} from "../model/day";
 import {ToastrService} from "ngx-toastr";
 import {DayService} from "./days.service";
-import {first, map, take} from "rxjs/operators";
-import {DayEvent} from "./model/event";
-import {Category} from "./category";
-import {categoryCoefficient} from "./category-coefficient";
+import {DayEvent} from "../model/event";
+import {Category} from "../category";
+import {categoryCoefficient} from "../category-coefficient";
 import {EventTemplateService} from "./event-template.service";
-import {EventTemplate} from "./model/event-template";
+import {EventTemplate} from "../model/event-template";
 import {Timestamp} from "@firebase/firestore";
 import * as uuid from 'uuid';
-import {calculateDatesForNextDays, calculateDurationInMinutes, dayBegin, dayEnd} from "./utils/date-util";
-import {Gap} from "./model/gap";
+import {calculateDatesForNextDays, calculateDurationInMinutes, dayBegin, dayEnd} from "../utils/date-util";
+import {Gap} from "../model/gap";
 
 @Injectable({
   providedIn: 'root'
@@ -35,23 +34,16 @@ export class GeneratorService {
   }
 
   private checkIfDayNotExistsAndThenInsertDay(dayDate: Date) {
-    this.dayService.getByDay(dayDate)
-      .pipe(first())
-      .subscribe(
-        queryResult => this.insertDay(queryResult, dayDate),
-        error => this.handleError(error)
-      );
-  }
-
-  private insertDay(queryResult: Day, dayDate: Date) {
-    if (!queryResult) {
+    let day: Day = this.dayService.getByDay(dayDate);
+    console.log(day)
+    if (!day) {
       const day: Day = {
         day: dayDate,
         optionalEvents: [],
         resultEvents: [],
       };
 
-      this.dayService.create(day)
+      this.dayService.add(day)
         .then(() => this.output(`Added Day for ${dayDate}`))
         .catch((error: any) => this.handleError(error));
     }
@@ -62,7 +54,7 @@ export class GeneratorService {
     try {
       this.output('START GENERATION------------------');
       this.necessaryCounter = 0;
-      let weights = await this.getWeights(day.day.toDate());
+      let weights = this.getWeights(day.day.toDate());
       let weightedCategories = this.getWeightedCategories(weights, categoryCoefficient);
       this.output(JSON.parse(JSON.stringify(day.resultEvents)));
 
@@ -71,7 +63,7 @@ export class GeneratorService {
 
       let gap = this.findGapBetweenEvents(day);
       this.output(gap);
-      let eventTemplates = await this.getEventTemplates();
+      let eventTemplates = this.getEventTemplates();
 
       while (gap) {
         this.output('Gap:');
@@ -92,20 +84,14 @@ export class GeneratorService {
         gap = this.findGapBetweenEvents(day);
       }
       this.output(day.resultEvents);
-      await this.dayService.update(day.id, day);
+      this.dayService.updateById(day);
     } catch (error) {
         this.handleError(error);
       }
   }
 
-  private async getEventTemplates(): Promise<EventTemplate[]> {
-    return this.eventTemplateService.getAll('').snapshotChanges().pipe(
-      map(changes =>
-        changes.map(c => ({ id: c.payload.doc.id, ...c.payload.doc.data() }))
-      )
-    ).pipe(
-      take(1),
-    ).toPromise();
+  private getEventTemplates(): EventTemplate[] {
+    return this.eventTemplateService.eventTemplateList;
   }
 
   private findEventTemplateAndGenerateEvent(day: Day, eventTemplates: EventTemplate[], gap: Gap, weightedCategories: [string, number][]): DayEvent | undefined {
@@ -336,12 +322,10 @@ private postprocessEventTemplate(eventTemplate: EventTemplate, eventTemplates: E
     const nextDays = calculateDatesForNextDays(numberOfDays);
 
     for (const dayDate of nextDays) {
-      const day = await this.dayService.getByDay(dayDate).toPromise();
-
-
-        const weights = await this.getWeights(dayDate);
-        this.addOptionalEvents(day, weights);
-        await this.dayService.update(day.id, day);
+      const day = this.dayService.getByDay(dayDate);
+      const weights = await this.getWeights(dayDate);
+      this.addOptionalEvents(day, weights);
+      await this.dayService.updateById(day);
     }
   }
 
@@ -386,13 +370,15 @@ private postprocessEventTemplate(eventTemplate: EventTemplate, eventTemplates: E
   }
 
   // Read Events for last n days and then sum categories
-  private async getWeights(dayDate: Date):  Promise<Map<string, number>> {
+  private getWeights(dayDate: Date):  Map<string, number> {
     try {
       const categoryWeightsMap = this.initializeCategoryWeightsMap();
       this.outputMap(categoryWeightsMap);
 
-      const allEvents: DayEvent[] = await this.dayService.getEventsFromPast(dayDate, 10).toPromise();
+      const allEvents: DayEvent[] = this.dayService.getResultEventsFromPast(dayDate, 10);
+
       for (const event of allEvents) {
+
         if (event.categories) {
           const categoryMap = this.parseCategoriesCSV(event.categories);
 

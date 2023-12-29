@@ -1,0 +1,58 @@
+[
+  {
+    "startTime": "2023-01-01T06:00:00Z",
+    "endTime": "2023-01-01T15:00:00Z",
+    "name": "Работа хоумофис",
+    "categories": "STUDY:30",
+    "type": "Mandatory"
+  },
+  {
+    "startTime": "2023-01-01T06:00:00Z",
+    "endTime": "2023-01-01T16:15:00Z",
+    "name": "Работа офис",
+    "categories": "SPORT:20;STUDY:30;PEOPLE:30",
+    "type": "Mandatory"
+  },
+  {
+    "startTime": "2023-01-01T06:00:00Z",
+    "endTime": "2023-01-01T06:30:00Z",
+    "name": "Завтрак",
+    "categories": "FAMILY:20",
+    "type": "Mandatory"
+  },
+  {
+    "startTime": "2023-01-01T10:30:00Z",
+    "endTime": "2023-01-01T11:15:00Z",
+    "name": "Обед",
+    "categories": "FAMILY:20",
+    "type": "Mandatory"
+  },
+  {
+    "startTime": "2023-01-01T16:30:00Z",
+    "endTime": "2023-01-01T17:15:00Z",
+    "name": "Ужин",
+    "categories": "FAMILY:20",
+    "type": "Mandatory"
+  },
+  {
+    "startTime": "2023-01-01T16:30:00Z",
+    "endTime": "2023-01-01T20:45:00Z",
+    "name": "Нескучный вечер",
+    "categories": "LEISURE:180;NECESSARY:180;FAMILY:180;PEOPLE:180",
+    "type": "Mandatory"
+  },
+  {
+    "startTime": "2023-01-01T12:00:00Z",
+    "endTime": "2023-01-01T17:00:00Z",
+    "name": "Любительская лига",
+    "categories": "LEISURE:180;NECESSARY:180;FAMILY:180;PEOPLE:180",
+    "type": "Mandatory"
+  },
+  {
+    "startTime": "2023-01-01T18:00:00Z",
+    "endTime": "2023-01-01T21:45:00Z",
+    "name": "ДНД",
+    "categories": "LEISURE:180;FAMILY:180;PEOPLE:180",
+    "type": "Mandatory"
+  }
+]

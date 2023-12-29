@@ -27,7 +27,6 @@ import { AddEventTemplateComponent } from './components/event-template/add-event
 import { EditEventTemplateComponent } from './components/event-template/edit-event-template/edit-event-template.component';
 import {
   EventTemplateListComponent,
-  NgModalConfirm
 } from './components/event-template/event-template-list/event-template-list.component';
 import {ToastrModule} from "ngx-toastr";
 import {NgxPaginationModule} from "ngx-pagination";
@@ -41,6 +40,10 @@ import {MatSidenavModule} from "@angular/material/sidenav";
 import {FlexLayoutModule, FlexModule} from "@angular/flex-layout";
 import {MatIconModule} from "@angular/material/icon";
 import {MatListModule} from "@angular/material/list";
+import { CategoriesFilterPipePipe } from './components/event-template/pipes/categories-filter-pipe.pipe';
+import {DaysSortPipe} from "./components/days/pipes/days-sort.pipe";
+import {DeleteConfirmModal} from "./shared/components/delete-dialog/delete-confirm.component";
+import {HttpClient, HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -54,12 +57,14 @@ import {MatListModule} from "@angular/material/list";
     AddEventTemplateComponent,
     EditEventTemplateComponent,
     EventTemplateListComponent,
-    NgModalConfirm,
     CategoriesListComponent,
     DaysListComponent,
     DayEventListComponent,
     AddEventComponent,
     EditEventComponent,
+    CategoriesFilterPipePipe,
+    DaysSortPipe,
+    DeleteConfirmModal
   ],
   imports: [
     AngularFireModule.initializeApp(environment.firebase),
@@ -85,7 +90,8 @@ import {MatListModule} from "@angular/material/list";
     FlexLayoutModule,
     FlexModule,
     MatIconModule,
-    MatListModule
+    MatListModule,
+    HttpClientModule
   ],
   providers: [],
   exports: [

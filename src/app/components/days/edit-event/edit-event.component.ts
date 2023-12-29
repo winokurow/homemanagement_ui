@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {NgForm} from '@angular/forms';
 import {ActivatedRoute, Router} from "@angular/router";
 import {ToastrService} from "ngx-toastr";
-import {DayService} from "../../../shared/days.service";
+import {DayService} from "../../../shared/services/days.service";
 import {Day} from "../../../shared/model/day";
 import {DayEvent} from "../../../shared/model/event";
 
@@ -31,7 +31,9 @@ export class EditEventComponent implements OnInit {
     this.eventId = this.route.snapshot.params['id'];
     this.dayId = this.route.snapshot.params['day'];
     this.type = this.route.snapshot.params['type'];
-    this.day = await this.dayService.get(this.dayId);
+    this.dayService.dayList.subscribe((days: Day[]) => {
+      this.day = days.find((day) => day.id === this.dayId);
+    })
     this.dayDate = this.day.day.toDate();
     this.getEventById();
   }
@@ -88,8 +90,8 @@ export class EditEventComponent implements OnInit {
           this.day.resultEvents[index].categories = eventTemplate.categories;
         }
       }
-      this.dayService.update(this.day.id, this.day);
-      this.router.navigate(['days', this.editEventForm.day, 'events']);
+      this.dayService.updateById(this.day).then(() => this.router.navigate(['days', this.editEventForm.day, 'events']));
+      ;
     }
   }
 }

@@ -7,12 +7,12 @@
             <h4><b>Manage EventTemplates</b></h4>
           </div>
           <div class="col-sm-6">
-            <button class="btn btn-success" (click)="AddEventTemplate()">
+            <button class="btn btn-success" (click)="clickAddEventTemplate()">
               <i class='fas fa-plus-circle'></i><span> ADD</span>
             </button>
           </div>
           <div class="col-sm-6">
-            <select [(ngModel)]="selectedCategory" (ngModelChange)="changeCategory()">
+            <select [(ngModel)]="selectedCategory">
               <option value="" disabled selected>Select a category</option>
               <option *ngFor="let option of selectCategoryOptions" [value]="option">{{ option }}</option>
             </select>
@@ -35,7 +35,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let eventTemplate of eventTemplateList" class="center-align">
+        <tr *ngFor="let eventTemplate of (eventTemplateService.eventTemplateList | categoriesFilterPipe: selectedCategory)" class="center-align">
           <td class="col-sm-1">{{ eventTemplate.order }}</td>
           <td class="col-sm-3">{{ eventTemplate.name }}</td>
           <td class="col-sm-1">{{ eventTemplate.weight }}</td>

@@ -70,7 +70,7 @@
               <label for="Categories" class="p-t-b-10">Categories<span class="requiredStar">*</span></label>
             </div>
             <div class="col-sm-9">
-              <app-categories-list [(ngModel)]="addEventTemplateForm.categories" name="Categories"  id="Categories"></app-categories-list>
+              <app-categories-list [(ngModel)]="addEventTemplateForm.categories" name="Categories" id="Categories"></app-categories-list>
             </div>
           </div>
           <div class="form-group p-10 row">
@@ -84,7 +84,7 @@
           </div>
         </div>
         <div class="table-footer">
-          <button class="btn btn-success" (click)="AddEventTemplate(eventTemplateForm.form.valid)">Submit</button>
+          <button class="btn btn-success" (click)="clickAddEventTemplate(eventTemplateForm.form.valid)">Submit</button>
         </div>
       </form>
     </div>

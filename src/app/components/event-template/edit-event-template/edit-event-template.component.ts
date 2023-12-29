@@ -1,8 +1,9 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {NgForm} from '@angular/forms';
-import {EventTemplateService} from "../../../shared/event-template.service";
+import {EventTemplateService} from "../../../shared/services/event-template.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ToastrService} from "ngx-toastr";
+import {EventTemplate} from "../../../shared/model/event-template";
 
 @Component({
   selector: 'app-edit-event-template',
@@ -27,26 +28,25 @@ export class EditEventTemplateComponent  implements OnInit {
     this.getEventTemplateDetailById();
   }
   getEventTemplateDetailById() {
-    this.eventTemplateService.get(this.eventTemplateId)
-    .subscribe((data: any) => {
-      this.editEventTemplateForm.order = data.data().order;
-      this.editEventTemplateForm.name = data.data().name;
-      this.editEventTemplateForm.category = data.data().category;
-      this.editEventTemplateForm.weight = data.data().weight;
-      this.editEventTemplateForm.duration = data.data().duration;
-      this.editEventTemplateForm.categories = data.data().categories;
-      this.editEventTemplateForm.postprocess = data.data().postprocess;
-      },
-      (error: any) => { });
+    let eventTemplate = this.eventTemplateService.eventTemplateList
+      .find(obj => obj.id === this.eventTemplateId);
+
+      this.editEventTemplateForm.order = eventTemplate.order;
+      this.editEventTemplateForm.name = eventTemplate.name;
+      this.editEventTemplateForm.category = eventTemplate.category;
+      this.editEventTemplateForm.weight = eventTemplate.weight;
+      this.editEventTemplateForm.duration = eventTemplate.duration;
+      this.editEventTemplateForm.categories = eventTemplate.categories;
+      this.editEventTemplateForm.postprocess = eventTemplate.postprocess;
   }
 
-  EditEventTemplate(isValid: any) {
+  clickEditEventTemplate(isValid: any) {
     this.isSubmitted = true;
     if (isValid) {
-
-      const eventTemplate = this.editEventTemplateForm
+      const eventTemplate : EventTemplate = this.editEventTemplateForm;
+      eventTemplate.id = this.eventTemplateId;
       //eventTemplate.id = this.eventTemplateId
-      this.eventTemplateService.update(this.eventTemplateId, eventTemplate).then((success) => {
+      this.eventTemplateService.updateById(eventTemplate).then((success) => {
         this.toastr.success('success');
         setTimeout(() => {
           this.router.navigate(['event-template', this.editEventTemplateForm.category]);

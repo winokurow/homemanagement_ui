@@ -1,16 +1,16 @@
 import {Component, OnInit} from '@angular/core';
-import {ToastrService} from "ngx-toastr";
 import {ActivatedRoute, Router} from "@angular/router";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {Type} from "ng-mocks";
-import {NgModalConfirm} from "../../event-template/event-template-list/event-template-list.component";
-import {DayService} from "../../../shared/days.service";
+import {DayService} from "../../../shared/services/days.service";
 import {Day} from "../../../shared/model/day";
+import {DeleteConfirmModal} from "../../../shared/components/delete-dialog/delete-confirm.component";
+import {RegularEventService} from "../../../shared/services/regular-events.service";
+import {DayEvent} from "../../../shared/model/event";
+import * as uuid from "uuid";
+import {addTimeToDate} from "../../../shared/utils/date-util";
+import {Timestamp} from "@firebase/firestore";
+import {GeneratorService} from "../../../shared/services/plan-generator.service";
 
-
-const MODALS: { [name: string]: Type<any> } = {
-  deleteModal: NgModalConfirm,
-};
 
 @Component({
   selector: 'app-day-event-list',
@@ -20,22 +20,32 @@ const MODALS: { [name: string]: Type<any> } = {
 export class DayEventListComponent implements OnInit {
 
   dayId: string;
-  day:Day;
+  day: Day;
+  regularEvents: DayEvent[] = [];
+  selectedRegularEvent: DayEvent | undefined;
+  regularOptionalEvents: DayEvent[] = [];
+  selectedOptionalRegularEvent: DayEvent | undefined;
 
   constructor(private router: Router, private route: ActivatedRoute, private modalService: NgbModal,
-              private toastr: ToastrService, private dayService: DayService) {
+              private dayService: DayService, private regularEventService: RegularEventService,
+              private generatorService: GeneratorService) {
 
   }
 
   ngOnInit(): void {
     this.dayId = this.route.snapshot.params['day'];
-    this.getDay();
+    this.dayService.dayList.subscribe((days: Day[]) => {
+      this.day = days.find((day) => day.id === this.dayId);
+      console.log(this.day);
+    });
+    this.regularEventService.getEvents().subscribe((events) => {
+      this.regularEvents = events;
+    });
+    this.regularEventService.getOptionalEvents().subscribe((events) => {
+      this.regularOptionalEvents = events;
+    });
   }
 
-  async getDay() {
-    this.day = await this.dayService.get(this.dayId);
-    console.log(this.day);
-  }
   addEvent() {
     this.router.navigate(['days', this.dayId, 'events', 'add', 'type', 'mandatory']);
   }
@@ -45,35 +55,68 @@ export class DayEventListComponent implements OnInit {
   }
 
   deleteEventConfirmation(event: any) {
-    this.modalService.open(MODALS['deleteModal'],
+    this.modalService.open(DeleteConfirmModal,
       {
         ariaLabelledBy: 'modal-basic-title'
-      }).result.then((result) => {
+      }).result.then(() => {
         this.deleteOptionalEvent(event);
       },
-      (reason) => {});
+      () => {});
   }
 
   deleteOptionalEvent(eventToDelete: any) {
     this.day.optionalEvents = this.day.optionalEvents.filter(event => eventToDelete.id != event.id);
-    this.dayService.update(this.day.id, this.day);
+    this.dayService.updateById(this.day);
   }
 
   deleteMandatoryEventConfirmation(event: any) {
-    this.modalService.open(MODALS['deleteModal'],
+    this.modalService.open(DeleteConfirmModal,
       {
         ariaLabelledBy: 'modal-basic-title'
-      }).result.then((result) => {
+      }).result.then(() => {
         this.deleteMandatoryEvent(event);
       },
-      (reason) => {});
+      () => {});
   }
 
   deleteMandatoryEvent(eventToDelete: any) {
     let result = this.day.resultEvents.filter(event => eventToDelete.id != event.id);
     console.log(result);
     this.day.resultEvents = result;
-    this.dayService.update(this.day.id, this.day);
+    this.dayService.updateById(this.day);
   }
 
+  clickAddRegularEvent() {
+    this.addRegularEvent(this.selectedRegularEvent);
+  }
+
+
+  clickAddOptionalRegularEvent() {
+    this.addRegularEvent(this.selectedOptionalRegularEvent);
+  }
+
+  addRegularEvent(event: DayEvent) {
+    const startDate = addTimeToDate(new Date(event.startTime), this.day.day.toDate());
+    const endDate = addTimeToDate(new Date(event.endTime), this.day.day.toDate());
+    const newEvent : DayEvent = {
+      ...(event),
+      id: uuid.v4(),
+      userId: this.day.userId,
+      startTime: Timestamp.fromDate(startDate),
+      endTime: Timestamp.fromDate(endDate),
+      name: event.name,
+      categories: event.categories,
+      type: event.type,
+      day: this.day.id,
+    };
+    if (event.type == 'Mandatory') {
+      this.day.resultEvents.push(newEvent);
+      this.dayService.updateById(this.day);
+    } else {
+      this.day.optionalEvents.push(newEvent);
+      this.dayService.updateById(this.day);
+      this.generatorService.addEvents(7);
+
+    }
+}
 }

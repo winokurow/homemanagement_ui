@@ -17,11 +17,18 @@
 
             <h4><b>Events</b></h4>
           </div>
-          <div class="col-sm-6 text-end">
+          <div class="col-sm-3 text-end">
 
             <button class="btn btn-success" (click)="addEvent()">
               <i class='fas fa-plus-circle'></i><span>Add Event</span>
             </button>
+          </div>
+          <div class="col-sm-3 text-end">
+            <label for="eventSelect">Select Event:</label>
+            <select id="eventSelect" [(ngModel)]="selectedRegularEvent" name="eventSelect">
+              <option *ngFor="let event of regularEvents" [ngValue]="event">{{ event.name }}</option>
+            </select>
+            <button (click)="clickAddRegularEvent()">Add</button>
           </div>
         </div>
       </div>
@@ -60,10 +67,17 @@
           <div class="col-sm-6">
             <h4><b>Optional Events</b></h4>
           </div>
-          <div class="col-sm-6 text-end">
+          <div class="col-sm-3 text-end">
             <button class="btn btn-success" (click)="addOptionalEvent()">
               <i class='fas fa-plus-circle'></i><span> Add Optional</span>
             </button>
+          </div>
+          <div class="col-sm-3 text-end">
+            <label for="optionaEventSelect">Select Event:</label>
+            <select id="optionaEventSelect" [(ngModel)]="selectedOptionalRegularEvent" name="optionaEventSelect">
+              <option *ngFor="let event of regularOptionalEvents" [ngValue]="event">{{ event.name }}</option>
+            </select>
+            <button (click)="clickAddOptionalRegularEvent()">Add</button>
           </div>
         </div>
       </div>
