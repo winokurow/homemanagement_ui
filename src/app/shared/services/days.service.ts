@@ -7,6 +7,7 @@ import {BehaviorSubject, Subscription} from "rxjs";
 import {Day} from "../model/day";
 import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {DayEvent} from "../model/event";
+import {Timestamp} from "@firebase/firestore";
 
 @Injectable({
   providedIn: 'root'
@@ -32,10 +33,25 @@ export class DayService {
 
           this.dayList.next(data
             .map(e => {
+              const dayData = e.payload.doc.data() as Day;
 
+              // Convert Firebase Timestamps to Date
+              if (dayData.day instanceof Timestamp) {
+                dayData.day = dayData.day.toDate();
+              }
+
+              dayData.resultEvents = dayData.resultEvents.map((event: DayEvent) => {
+                if (event.startTime instanceof Timestamp) {
+                  event.startTime = event.startTime.toDate();
+                }
+                if (event.endTime instanceof Timestamp) {
+                  event.endTime = event.endTime.toDate();
+                }
+                return event;
+              });
               return {
                 id: e.payload.doc.id,
-                ...e.payload.doc.data()
+                ...dayData
               } as Day;
             }))
         })
@@ -52,28 +68,49 @@ export class DayService {
 
   public add(day: Day): Promise<DocumentReference<any>> {
     day.userId = this.userUid;
-    return this.firestore.collection(this.dbPath).add({...day});
-  }
-
-  public deleteById(id: string): void {
-    this.firestore.doc(this.dbPath + '/' + id).delete();
+    const convertedDay = this.convertDatesToTimestamps(day);
+    return this.firestore.collection(this.dbPath).add({...convertedDay});
   }
 
   public updateById(day: Day): Promise<any> {
-    return this.firestore.doc(this.dbPath + '/' + day.id).update({...day});
+    const convertedDay = this.convertDatesToTimestamps(day);
+    return this.firestore.doc(this.dbPath + '/' + day.id).update({...convertedDay});
   }
 
-  getResultEventsFromPast(fromDate: Date, interval: number): DayEvent[] {
+  public getResultEventsFromPast(fromDate: Date, interval: number): DayEvent[] {
     const toDate = new Date(fromDate);
     toDate.setDate(fromDate.getDate() - interval);
-    console.log('here');
-    console.log(toDate);
-    console.log(this.dayList.getValue());
-    return this.dayList.getValue().filter(day => day.day.toDate().getTime() >= toDate.getTime() && day.day.toDate().getTime() <= fromDate.getTime())
+    return this.dayList.getValue()
+      .filter(day => day.day.getTime() >= toDate.getTime() && day.day.getTime() <= fromDate.getTime())
       .flatMap(day => day.resultEvents);
   }
 
-  getByDay(dayDate:Date): Day {
-    return this.dayList.getValue().find(day => day.day.toDate().getTime() == dayDate.getTime());
+  public getByDay(dayDate:Date): Day {
+    return this.dayList.getValue().find(day => day.day.getTime() == dayDate.getTime());
   }
+
+
+  private convertDatesToTimestamps(obj: any): any {
+    if (Array.isArray(obj)) {
+      return obj.map((item) => this.convertDatesToTimestamps(item));
+    } else {
+      // Iterate through each property in the object
+      for (const prop in obj) {
+        if (obj.hasOwnProperty(prop)) {
+          // Check if the property is an object
+          if (typeof obj[prop] === 'object' && obj[prop] !== null) {
+            // Recursively convert dates in nested objects
+            obj[prop] = this.convertDatesToTimestamps(obj[prop]);
+          } else if (prop.endsWith('Date') && obj[prop] instanceof Date) {
+            // Convert date fields to Firebase Timestamp
+            obj[prop] = Timestamp.fromDate(obj[prop]);
+          }
+        }
+      }
+
+    }
+    return obj;
+  }
+
 }
+

@@ -7,7 +7,6 @@ import {Category} from "../category";
 import {categoryCoefficient} from "../category-coefficient";
 import {EventTemplateService} from "./event-template.service";
 import {EventTemplate} from "../model/event-template";
-import {Timestamp} from "@firebase/firestore";
 import * as uuid from 'uuid';
 import {calculateDatesForNextDays, calculateDurationInMinutes, dayBegin, dayEnd} from "../utils/date-util";
 import {Gap} from "../model/gap";
@@ -54,7 +53,7 @@ export class GeneratorService {
     try {
       this.output('START GENERATION------------------');
       this.necessaryCounter = 0;
-      let weights = this.getWeights(day.day.toDate());
+      let weights = this.getWeights(day.day);
       let weightedCategories = this.getWeightedCategories(weights, categoryCoefficient);
       this.output(JSON.parse(JSON.stringify(day.resultEvents)));
 
@@ -128,14 +127,16 @@ export class GeneratorService {
   private generateEventForCategories(category: string, day: Day, gap: Gap, eventTemplates: EventTemplate[]): DayEvent | undefined {
     // Hygiene, Family, People
     if (category === Category.HYGIENE || category === Category.FAMILY || category === Category.PEOPLE) {
+      console.log('// Hygiene, Family, People')
+      console.log(category === Category.HYGIENE || category === Category.FAMILY || category === Category.PEOPLE)
       let endTime = new Date(gap.start);
       endTime.setMinutes(endTime.getMinutes() + this.FIVE_MINUTES);
 
       return {
         id: uuid.v4(),
         userId: day.userId,
-        startTime: Timestamp.fromDate(new Date(gap.start)),
-        endTime: Timestamp.fromDate(endTime),
+        startTime: new Date(gap.start),
+        endTime: endTime,
         name: category,
         categories: `${category}:5`,
         type: 'generated',
@@ -171,8 +172,8 @@ export class GeneratorService {
         let newEvent: DayEvent = {
           id: uuid.v4(),
           userId: necessaryTemplate.userId,
-          startTime: Timestamp.fromDate(new Date(gap.start)),
-          endTime: Timestamp.fromDate(endTime),
+          startTime: new Date(gap.start),
+          endTime: endTime,
           name: necessaryTemplate.name,
           categories: necessaryTemplate.categories,
           type: 'generated',
@@ -192,8 +193,8 @@ export class GeneratorService {
     let newEvent: DayEvent = {
       userId: day.userId,
       id: uuid.v4(),
-      startTime: Timestamp.fromDate(new Date(gap.start)),
-      endTime: Timestamp.fromDate(new Date(gap.start)),
+      startTime: new Date(gap.start),
+      endTime: new Date(gap.start),
       name: '',
       categories: '',
       type: 'generated',
@@ -209,7 +210,7 @@ export class GeneratorService {
     const totalWeight = filteredEventTemplateList
       .reduce((sum, eventTemplate) => sum + eventTemplate.weight, 0);
 
-    if (totalWeight > 0) {
+    if (totalWeight && totalWeight > 0) {
       while (aggregatedDuration < this.FIVE_MINUTES) {
         const randomNumber = Math.floor(Math.random() * totalWeight);
         let cumulativeWeight = 0;
@@ -226,8 +227,8 @@ export class GeneratorService {
             this.output('aggregatedDuration' + aggregatedDuration);
             const endTime = new Date(gap.start);
             endTime.setMinutes(endTime.getMinutes() + Math.round(aggregatedDuration / 5) * 5);
-            newEvent.endTime = Timestamp.fromDate(endTime);
-            newEvent.startTime = Timestamp.fromDate(gap.start);
+            newEvent.endTime = endTime;
+            newEvent.startTime = gap.start;
             newEvent.categories = eventTemplate.categories;
 
             newEvent = this.postprocessEventTemplate(eventTemplate, eventTemplates, day, newEvent, gap);
@@ -244,7 +245,9 @@ export class GeneratorService {
         }
       }
     }
-
+    else {
+      return null;
+        }
     if (!newEvent.categories) {
       newEvent.categories = category + ':' + aggregatedDuration;
     }
@@ -259,12 +262,12 @@ private postprocessEventTemplate(eventTemplate: EventTemplate, eventTemplates: E
   if (eventTemplate.postprocess !== undefined && eventTemplate.postprocess !== '') {
     this.output('postprocessing');
     if (eventTemplate.postprocess === this.WHOLE_DAY_POSTPROCESS) {
-      let beginTime = dayBegin(day.day.toDate());
-      let endTime = dayEnd(day.day.toDate());
+      let beginTime = dayBegin(day.day);
+      let endTime = dayEnd(day.day);
 
       newEvent.categories = eventTemplate.categories;
-      newEvent.startTime = Timestamp.fromDate(beginTime);
-      newEvent.endTime = Timestamp.fromDate(endTime);
+      newEvent.startTime = beginTime;
+      newEvent.endTime = endTime;
       newEvent.postprocess = this.WHOLE_DAY_POSTPROCESS;
       return newEvent;
     } else {
@@ -290,21 +293,21 @@ private postprocessEventTemplate(eventTemplate: EventTemplate, eventTemplates: E
   private findGapBetweenEvents(
     day: Day
   ): Gap | null {
-    const beginTime = dayBegin(day.day.toDate());
-    const endTime = dayEnd(day.day.toDate());
+    const beginTime = dayBegin(day.day);
+    const endTime = dayEnd(day.day);
     let previousEndTime = new Date(beginTime);
-    let events = day.resultEvents.sort((a, b) => a.startTime - b.startTime);
+    let events = day.resultEvents.sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
     this.output('result events');
     this.output(events);
     for (const event of events) {
-      if (event.startTime.toDate() > previousEndTime) {
+      if (event.startTime > previousEndTime) {
         return {
           start: previousEndTime,
-          end: event.startTime.toDate(),
-          duration: calculateDurationInMinutes(previousEndTime, event.startTime.toDate())
+          end: event.startTime,
+          duration: calculateDurationInMinutes(previousEndTime, event.startTime)
         }
       }
-      previousEndTime = new Date(event.endTime.toDate());
+      previousEndTime = new Date(event.endTime);
     }
 
     if (previousEndTime < endTime) {

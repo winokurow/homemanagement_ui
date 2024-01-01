@@ -36,10 +36,13 @@ export function addTimeToDate(sourceDate: Date, targetDate: Date): Date {
   const seconds = sourceDate.getSeconds();
 
   // Set the time to the target date
+  console.log(targetDate);
+  console.log(typeof targetDate);
   targetDate.setHours(hours);
   targetDate.setMinutes(minutes);
   targetDate.setSeconds(seconds);
 
   return targetDate;
 }
+
 

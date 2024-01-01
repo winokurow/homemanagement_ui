@@ -34,7 +34,7 @@ export class EditEventComponent implements OnInit {
     this.dayService.dayList.subscribe((days: Day[]) => {
       this.day = days.find((day) => day.id === this.dayId);
     })
-    this.dayDate = this.day.day.toDate();
+    this.dayDate = this.day.day;
     this.getEventById();
   }
 
@@ -47,8 +47,8 @@ export class EditEventComponent implements OnInit {
       dayEvent = this.day.resultEvents.find((event) => event.id === this.eventId);
     }
 
-      this.editEventForm.startTime = dayEvent.startTime.toDate().toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'});
-      this.editEventForm.endTime = dayEvent.endTime.toDate().toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'});
+      this.editEventForm.startTime = dayEvent.startTime.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'});
+      this.editEventForm.endTime = dayEvent.endTime.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'});
       this.editEventForm.day = dayEvent.day;
       this.editEventForm.type = dayEvent.type;
       this.editEventForm.name = dayEvent.name;
@@ -91,7 +91,6 @@ export class EditEventComponent implements OnInit {
         }
       }
       this.dayService.updateById(this.day).then(() => this.router.navigate(['days', this.editEventForm.day, 'events']));
-      ;
     }
   }
 }

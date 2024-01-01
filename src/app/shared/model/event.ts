@@ -1,8 +1,8 @@
 export interface DayEvent {
   id?: string;
   userId?: string;
-  startTime: any;
-  endTime: any;
+  startTime: Date;
+  endTime: Date;
   name: string;
   categories: string;
   type: string;

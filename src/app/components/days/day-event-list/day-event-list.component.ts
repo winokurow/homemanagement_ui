@@ -96,14 +96,14 @@ export class DayEventListComponent implements OnInit {
   }
 
   addRegularEvent(event: DayEvent) {
-    const startDate = addTimeToDate(new Date(event.startTime), this.day.day.toDate());
-    const endDate = addTimeToDate(new Date(event.endTime), this.day.day.toDate());
+    const startDate = addTimeToDate(new Date(event.startTime), new Date(this.day.day));
+    const endDate = addTimeToDate(new Date(event.endTime), new Date(this.day.day));
     const newEvent : DayEvent = {
       ...(event),
       id: uuid.v4(),
       userId: this.day.userId,
-      startTime: Timestamp.fromDate(startDate),
-      endTime: Timestamp.fromDate(endDate),
+      startTime: startDate,
+      endTime: endDate,
       name: event.name,
       categories: event.categories,
       type: event.type,
