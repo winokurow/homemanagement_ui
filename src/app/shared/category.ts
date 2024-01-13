@@ -1,4 +1,5 @@
 export const Category = {
+  WORK: "WORK",
   LEISURE: "LEISURE",
   NECESSARY: "NECESSARY",
   SPORT: "SPORT",

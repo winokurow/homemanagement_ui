@@ -44,6 +44,7 @@ import { CategoriesFilterPipePipe } from './components/event-template/pipes/cate
 import {DaysSortPipe} from "./components/days/pipes/days-sort.pipe";
 import {DeleteConfirmModal} from "./shared/components/delete-dialog/delete-confirm.component";
 import {HttpClient, HttpClientModule} from "@angular/common/http";
+import { RandomEventComponent } from './components/random/random-event/random-event.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +65,8 @@ import {HttpClient, HttpClientModule} from "@angular/common/http";
     EditEventComponent,
     CategoriesFilterPipePipe,
     DaysSortPipe,
-    DeleteConfirmModal
+    DeleteConfirmModal,
+    RandomEventComponent
   ],
   imports: [
     AngularFireModule.initializeApp(environment.firebase),

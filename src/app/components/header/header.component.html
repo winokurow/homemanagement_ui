@@ -6,10 +6,10 @@
   </button>
   <span class="fill-remaining-space"></span>
   <div fxShow="true" fxHide.lt-md="true">
-      <button mat-button routerLink="/dashboard">Dashboard</button>
+      <button mat-button routerLink="/dashboard">Dashboard1</button>
       <button mat-button routerLink="/days">Days</button>
       <button mat-button routerLink="/event-template">Event Templates</button>
-      <button mat-button routerLink="/event-template">Lists</button>
+      <button mat-button routerLink="/random-event">Random</button>
       <button mat-button (click)="onLogout()">Logout</button>
     </div>
     </mat-toolbar-row>
@@ -27,8 +27,8 @@
       <mat-list-item routerLink="/event-template">
         <span>Event Templates</span>
       </mat-list-item>
-      <mat-list-item routerLink="/event-template">
-        <span>Lists</span>
+      <mat-list-item routerLink="/random-event">
+        <span>Random</span>
       </mat-list-item>
       <mat-list-item routerLink="/login">
         <span>Login</span>

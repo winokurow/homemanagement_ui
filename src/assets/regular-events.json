@@ -21,10 +21,10 @@
     "type": "Mandatory"
   },
   {
-    "startTime": "2023-01-01T10:30:00Z",
+    "startTime": "2023-01-01T11:00:00Z",
     "endTime": "2023-01-01T11:15:00Z",
     "name": "Обед",
-    "categories": "FAMILY:20",
+    "categories": "FAMILY:10",
     "type": "Mandatory"
   },
   {

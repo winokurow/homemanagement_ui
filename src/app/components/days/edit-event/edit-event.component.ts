@@ -34,7 +34,7 @@ export class EditEventComponent implements OnInit {
     this.dayService.dayList.subscribe((days: Day[]) => {
       this.day = days.find((day) => day.id === this.dayId);
     })
-    this.dayDate = this.day.day;
+    this.dayDate = this.day.dayDate;
     this.getEventById();
   }
 

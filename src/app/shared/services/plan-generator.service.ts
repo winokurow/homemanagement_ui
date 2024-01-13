@@ -37,7 +37,7 @@ export class GeneratorService {
     console.log(day)
     if (!day) {
       const day: Day = {
-        day: dayDate,
+        dayDate: dayDate,
         optionalEvents: [],
         resultEvents: [],
       };
@@ -53,7 +53,7 @@ export class GeneratorService {
     try {
       this.output('START GENERATION------------------');
       this.necessaryCounter = 0;
-      let weights = this.getWeights(day.day);
+      let weights = this.getWeights(day.dayDate);
       let weightedCategories = this.getWeightedCategories(weights, categoryCoefficient);
       this.output(JSON.parse(JSON.stringify(day.resultEvents)));
 
@@ -233,11 +233,11 @@ export class GeneratorService {
 
             newEvent = this.postprocessEventTemplate(eventTemplate, eventTemplates, day, newEvent, gap);
             templatesCount++;
-            if (templatesCount > 1) {
-              newEvent.name += '-----------';
-            }
             if (eventTemplate.room) {
-              newEvent.name +=  eventTemplate.room;
+              newEvent.name +=  ' ' + eventTemplate.room;
+            }
+            if (templatesCount >  1) {
+              newEvent.name += '-----------';
             }
 
             break;
@@ -262,8 +262,8 @@ private postprocessEventTemplate(eventTemplate: EventTemplate, eventTemplates: E
   if (eventTemplate.postprocess !== undefined && eventTemplate.postprocess !== '') {
     this.output('postprocessing');
     if (eventTemplate.postprocess === this.WHOLE_DAY_POSTPROCESS) {
-      let beginTime = dayBegin(day.day);
-      let endTime = dayEnd(day.day);
+      let beginTime = dayBegin(day.dayDate);
+      let endTime = dayEnd(day.dayDate);
 
       newEvent.categories = eventTemplate.categories;
       newEvent.startTime = beginTime;
@@ -293,8 +293,8 @@ private postprocessEventTemplate(eventTemplate: EventTemplate, eventTemplates: E
   private findGapBetweenEvents(
     day: Day
   ): Gap | null {
-    const beginTime = dayBegin(day.day);
-    const endTime = dayEnd(day.day);
+    const beginTime = dayBegin(day.dayDate);
+    const endTime = dayEnd(day.dayDate);
     let previousEndTime = new Date(beginTime);
     let events = day.resultEvents.sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
     this.output('result events');
@@ -452,7 +452,7 @@ private postprocessEventTemplate(eventTemplate: EventTemplate, eventTemplates: E
 
   private initializeCategoryWeightsMap(): Map<string, number> {
     const categoryWeightsMap = new Map<string, number>();
-    Object.values(Category).forEach(category => {
+    Object.values(Category).filter(category => Object.keys(categoryCoefficient).includes(category)).forEach(category => {
       categoryWeightsMap.set(category, 0);
     });
     return categoryWeightsMap;

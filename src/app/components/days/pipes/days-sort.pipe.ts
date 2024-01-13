@@ -10,7 +10,7 @@ export class DaysSortPipe implements PipeTransform {
   transform(days: Day[]): Day[] {
     return days
       .sort((a, b) => {
-      return a.day > b.day ? -1 : 1;
+      return a.dayDate > b.dayDate ? -1 : 1;
     });
   }
 

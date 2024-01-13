@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {EventTemplate} from "../model/event-template"
 import {AngularFirestore} from '@angular/fire/compat/firestore';
-import {Subscription} from "rxjs";
+import {BehaviorSubject, Subscription} from "rxjs";
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 
 @Injectable({
@@ -12,6 +12,8 @@ export class EventTemplateService {
   private dbPath = '/event-templates';
 
   public eventTemplateList: EventTemplate[] = [];
+
+  eventTemplateListSubject: BehaviorSubject<EventTemplate[]> = new BehaviorSubject([]);
 
   private userUid = '';
 
@@ -34,6 +36,13 @@ export class EventTemplateService {
                 ...e.payload.doc.data()
               } as EventTemplate;
             })
+          this.eventTemplateListSubject.next(data
+            .map(e => {
+              return {
+                id: e.payload.doc.id,
+                ...e.payload.doc.data()
+              } as EventTemplate;
+            }));
         });
       } else {
         if (this.eventTemplateSubscription) {

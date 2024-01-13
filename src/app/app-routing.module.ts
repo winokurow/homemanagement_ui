@@ -13,13 +13,14 @@ import {DaysListComponent} from "./components/days/days-list/days-list.component
 import {DayEventListComponent} from "./components/days/day-event-list/day-event-list.component";
 import {AddEventComponent} from "./components/days/add-event/add-event.component";
 import {EditEventComponent} from "./components/days/edit-event/edit-event.component";
+import {RandomEventComponent} from "./components/random/random-event/random-event.component";
 
 export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   { path: 'sign-in', component: SignInComponent },
   { path: 'register-user', component: SignUpComponent },
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
-  { path: 'planer', component: DashboardComponent, canActivate: [AuthGuard] },
+  { path: 'random-event', component: RandomEventComponent, canActivate: [AuthGuard] },
   { path: 'event-template', component: EventTemplateListComponent, canActivate: [AuthGuard] },
   { path: 'event-template/:category', component: EventTemplateListComponent, canActivate: [AuthGuard] },
   { path: 'edit-event-template/:id', component: EditEventTemplateComponent, canActivate: [AuthGuard] },

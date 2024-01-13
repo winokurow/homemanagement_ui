@@ -38,7 +38,7 @@ export class AddEventComponent {
     this.dayService.dayList.subscribe((days: Day[]) => {
       this.day = days.find((day) => day.id === this.dayId);
     })
-    this.dayDate = this.day.day.toDate();
+    this.dayDate = this.day.dayDate;
   }
 
   addEvent(isValid: any) {

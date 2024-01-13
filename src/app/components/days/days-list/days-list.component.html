@@ -21,7 +21,7 @@
         <div  class="row">
             <div class="list-group">
               <div class="list-group-item clearfix" *ngFor="let day of days | daysSortPipe  | slice:0:21;" [ngStyle]="{ 'background-color': stateColors[day.state] }">
-                <span class="mr-5">{{day.day | date:' EEEE dd.MM' }}</span>
+                <span class="mr-5">{{day.dayDate | date:' EEEE dd.MM' }}</span>
                 <a class="btn btn-link btn-rounded btn-sm" role="button" [routerLink]="'/days/' + day.id + '/events'">Events</a>
                 <a class="btn btn-link btn-rounded btn-sm" role="button" (click)="generate(day)">Generate</a>
                 <a class="btn btn-link btn-rounded btn-sm" role="button" (click)="show(day)">Show</a>

@@ -36,8 +36,11 @@ export class DayService {
               const dayData = e.payload.doc.data() as Day;
 
               // Convert Firebase Timestamps to Date
+              if (dayData.dayDate instanceof Timestamp) {
+                dayData.dayDate = dayData.dayDate.toDate();
+              }
               if (dayData.day instanceof Timestamp) {
-                dayData.day = dayData.day.toDate();
+                dayData.dayDate = dayData.day.toDate();
               }
 
               dayData.resultEvents = dayData.resultEvents.map((event: DayEvent) => {
@@ -81,12 +84,12 @@ export class DayService {
     const toDate = new Date(fromDate);
     toDate.setDate(fromDate.getDate() - interval);
     return this.dayList.getValue()
-      .filter(day => day.day.getTime() >= toDate.getTime() && day.day.getTime() <= fromDate.getTime())
+      .filter(day => day.dayDate.getTime() >= toDate.getTime() && day.dayDate.getTime() <= fromDate.getTime())
       .flatMap(day => day.resultEvents);
   }
 
   public getByDay(dayDate:Date): Day {
-    return this.dayList.getValue().find(day => day.day.getTime() == dayDate.getTime());
+    return this.dayList.getValue().find(day => day.dayDate.getTime() == dayDate.getTime());
   }
 
 

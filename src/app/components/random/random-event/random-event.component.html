@@ -1,0 +1,12 @@
+<div>
+  <label for="eventSelect">Category:</label>
+  <select id="eventSelect" [(ngModel)]="selectedCategory" name="eventSelect">
+    <option *ngFor="let option of selectCategoryOptions" [ngValue]="option">{{ option }}</option>
+  </select>
+  <button (click)="generateEvent()">Generate</button>
+  <div>{{selectedEventTemplate}}</div>
+</div>
+<div>
+  <button (click)="generateNumber()">Generate Number</button>
+  <div>{{generatedNumber}}</div>
+</div>

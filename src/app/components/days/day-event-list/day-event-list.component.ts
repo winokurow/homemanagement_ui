@@ -8,7 +8,6 @@ import {RegularEventService} from "../../../shared/services/regular-events.servi
 import {DayEvent} from "../../../shared/model/event";
 import * as uuid from "uuid";
 import {addTimeToDate} from "../../../shared/utils/date-util";
-import {Timestamp} from "@firebase/firestore";
 import {GeneratorService} from "../../../shared/services/plan-generator.service";
 
 
@@ -96,8 +95,8 @@ export class DayEventListComponent implements OnInit {
   }
 
   addRegularEvent(event: DayEvent) {
-    const startDate = addTimeToDate(new Date(event.startTime), new Date(this.day.day));
-    const endDate = addTimeToDate(new Date(event.endTime), new Date(this.day.day));
+    const startDate = addTimeToDate(new Date(event.startTime), new Date(this.day.dayDate));
+    const endDate = addTimeToDate(new Date(event.endTime), new Date(this.day.dayDate));
     const newEvent : DayEvent = {
       ...(event),
       id: uuid.v4(),

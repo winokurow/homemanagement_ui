@@ -24,6 +24,7 @@ export class DaysListComponent  implements OnInit {
   ngOnInit(): void {
     this.dayService.dayList.subscribe((days: Day[]) => {
       this.days = days;
+      console.log(this.days);
     })
   }
 
