@@ -57,9 +57,6 @@ export class GeneratorService {
       let weightedCategories = this.getWeightedCategories(weights, categoryCoefficient);
       this.output(JSON.parse(JSON.stringify(day.resultEvents)));
 
-      //add Optional Events
-      this.addOptionalEvents(day, weights);
-
       let gap = this.findGapBetweenEvents(day);
       this.output(gap);
       let eventTemplates = this.getEventTemplates();
@@ -69,7 +66,11 @@ export class GeneratorService {
         this.output(gap.start.toLocaleTimeString());
         this.output(gap.end.toLocaleTimeString());
 
-        let newEvent = this.findEventTemplateAndGenerateEvent(day, eventTemplates, gap, weightedCategories);
+        //add Optional Events
+        let newEvent = this.addOptionalEvents(day, weights);
+        if (!newEvent) {
+          newEvent = this.findEventTemplateAndGenerateEvent(day, eventTemplates, gap, weightedCategories);
+        }
         weights = this.updateWeights(weights, this.parseCategoriesCSV(newEvent.categories));
         weightedCategories = this.getWeightedCategories(weights, categoryCoefficient);
         this.output(weightedCategories);
@@ -78,7 +79,6 @@ export class GeneratorService {
         }
         this.output("Add event");
         this.output(newEvent);
-
         day.resultEvents.push(newEvent);
         gap = this.findGapBetweenEvents(day);
       }
@@ -93,7 +93,8 @@ export class GeneratorService {
     return this.eventTemplateService.eventTemplateList;
   }
 
-  private findEventTemplateAndGenerateEvent(day: Day, eventTemplates: EventTemplate[], gap: Gap, weightedCategories: [string, number][]): DayEvent | undefined {
+  private findEventTemplateAndGenerateEvent(day: Day, eventTemplates: EventTemplate[],
+                                            gap: Gap, weightedCategories: [string, number][]): DayEvent | undefined {
     try {
     this.output('duration:');
     this.output(gap.duration);
@@ -155,7 +156,6 @@ export class GeneratorService {
 
   private generateNecessaryEvent(day: Day, gap: Gap, weightedCategories: [string, number][], eventTemplates: EventTemplate[]): DayEvent | undefined {
 
-
     let filteredNecessaryEventTemplateList: EventTemplate[] = eventTemplates
       .filter((template) => template.category === Category.NECESSARY.toLowerCase())
       .sort((a, b) => a.order - b.order);
@@ -189,7 +189,7 @@ export class GeneratorService {
   }
 
 
-  private chooseEventTemplate(category: String, day: Day, gap: Gap, eventTemplates: EventTemplate[]) {
+  private chooseEventTemplate(category: string, day: Day, gap: Gap, eventTemplates: EventTemplate[]) {
     let newEvent: DayEvent = {
       userId: day.userId,
       id: uuid.v4(),
@@ -327,14 +327,16 @@ private postprocessEventTemplate(eventTemplate: EventTemplate, eventTemplates: E
     for (const dayDate of nextDays) {
       const day = this.dayService.getByDay(dayDate);
       const weights = await this.getWeights(dayDate);
-      this.addOptionalEvents(day, weights);
+
+      let optionalEvent = this.addOptionalEvents(day, weights);
+      day.resultEvents.push(optionalEvent);
       await this.dayService.updateById(day);
     }
   }
 
 
 
-  private addOptionalEvents(day: Day, weights: Map<string, number>) {
+  private addOptionalEvents(day: Day, weights: Map<string, number>): DayEvent {
     if (day && day.optionalEvents && day.optionalEvents.length > 0) {
 
       for (const optionalEvent of day.optionalEvents) {
@@ -364,12 +366,11 @@ private postprocessEventTemplate(eventTemplate: EventTemplate, eventTemplates: E
           this.toastr.success('Add optional event ' + optionalEvent.name);
           this.output('Add optional event');
           this.output(optionalEvent);
-          day.resultEvents.push(optionalEvent);
-
-          this.updateWeights(weights, categoriesMap);
+          return optionalEvent;
         }
       }
     }
+    return null;
   }
 
   // Read Events for last n days and then sum categories

@@ -52,6 +52,17 @@ export class DayService {
                 }
                 return event;
               });
+              if (dayData.optionalEvents) {
+                dayData.optionalEvents = dayData.optionalEvents.map((event: DayEvent) => {
+                  if (event.startTime instanceof Timestamp) {
+                    event.startTime = event.startTime.toDate();
+                  }
+                  if (event.endTime instanceof Timestamp) {
+                    event.endTime = event.endTime.toDate();
+                  }
+                  return event;
+                });
+              }
               return {
                 id: e.payload.doc.id,
                 ...dayData

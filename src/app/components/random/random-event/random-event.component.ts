@@ -38,7 +38,7 @@ export class RandomEventComponent  implements OnInit {
       .reduce((sum, eventTemplate) => sum + eventTemplate.weight, 0);
 
     if (totalWeight && totalWeight > 0) {
-        const randomNumber = Math.floor(Math.random() * totalWeight);
+        const randomNumber  = Math.floor(Math.random() * totalWeight);
         let cumulativeWeight = 0;
 
         for (const eventTemplate of filteredEventTemplateList) {

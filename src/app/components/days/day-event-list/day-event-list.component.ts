@@ -91,10 +91,12 @@ export class DayEventListComponent implements OnInit {
 
 
   clickAddOptionalRegularEvent() {
+    console.log("Add event")
     this.addRegularEvent(this.selectedOptionalRegularEvent);
   }
 
   addRegularEvent(event: DayEvent) {
+    console.log("event" + event)
     const startDate = addTimeToDate(new Date(event.startTime), new Date(this.day.dayDate));
     const endDate = addTimeToDate(new Date(event.endTime), new Date(this.day.dayDate));
     const newEvent : DayEvent = {
@@ -108,6 +110,7 @@ export class DayEventListComponent implements OnInit {
       type: event.type,
       day: this.day.id,
     };
+    console.log("event" + newEvent)
     if (event.type == 'Mandatory') {
       this.day.resultEvents.push(newEvent);
       this.dayService.updateById(this.day);
