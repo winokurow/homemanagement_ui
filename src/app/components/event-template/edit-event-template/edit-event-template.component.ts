@@ -38,6 +38,7 @@ export class EditEventTemplateComponent  implements OnInit {
       this.editEventTemplateForm.duration = eventTemplate.duration;
       this.editEventTemplateForm.categories = eventTemplate.categories;
       this.editEventTemplateForm.postprocess = eventTemplate.postprocess;
+    this.editEventTemplateForm.creationDate = eventTemplate.creationDate;
   }
 
   clickEditEventTemplate(isValid: any) {
@@ -68,4 +69,5 @@ export class eventTemplateForm {
   duration: number = 0;
   categories: string = "";
   postprocess: string = "";
+  creationDate: Date;
 }

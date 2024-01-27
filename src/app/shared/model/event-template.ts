@@ -10,5 +10,6 @@ export interface EventTemplate {
   postprocess: string;
   room?: string;
   category?: string;
+  creationDate: Date;
 }
 

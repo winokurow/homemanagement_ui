@@ -48,5 +48,6 @@ export class eventTemplateForm {
   duration: number = 0;
   categories: string = "";
   postprocess: string = "";
+  creationDate = new Date();
 }
 

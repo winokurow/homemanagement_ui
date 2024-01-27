@@ -3,6 +3,7 @@ import {EventTemplate} from "../model/event-template"
 import {AngularFirestore} from '@angular/fire/compat/firestore';
 import {BehaviorSubject, Subscription} from "rxjs";
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import {Timestamp} from "@firebase/firestore";
 
 @Injectable({
   providedIn: 'root'
@@ -31,10 +32,15 @@ export class EventTemplateService {
           }).snapshotChanges().subscribe(data => {
           this.eventTemplateList = data
             .map(e => {
-              return {
+              const eventTemplate : EventTemplate = {
                 id: e.payload.doc.id,
                 ...e.payload.doc.data()
               } as EventTemplate;
+              // Convert Firebase Timestamps to Date
+              if (eventTemplate.creationDate instanceof Timestamp) {
+                eventTemplate.creationDate = eventTemplate.creationDate.toDate();
+              }
+              return eventTemplate;
             })
           this.eventTemplateListSubject.next(data
             .map(e => {
@@ -57,8 +63,10 @@ export class EventTemplateService {
 
   public add(eventTemplate: EventTemplate): Promise<any> {
     eventTemplate.userId = this.userUid;
+    eventTemplate.creationDate = new Date();
     eventTemplate.category = eventTemplate.category.toLowerCase();
-    return this.firestore.collection(this.dbPath).add({...eventTemplate});
+    const convertedEventTemplate = this.convertDatesToTimestamps(eventTemplate);
+    return this.firestore.collection(this.dbPath).add({...convertedEventTemplate});
   }
 
   public deleteById(id: string): void {
@@ -66,6 +74,30 @@ export class EventTemplateService {
   }
 
   public updateById(eventTemplate: EventTemplate): Promise<any> {
-    return this.firestore.doc(this.dbPath + '/' + eventTemplate.id).update({...eventTemplate});
+    const convertedEventTemplate = this.convertDatesToTimestamps(eventTemplate);
+    return this.firestore.doc(this.dbPath + '/' + eventTemplate.id).update({...convertedEventTemplate});
   }
+
+  private convertDatesToTimestamps(obj: any): any {
+    if (Array.isArray(obj)) {
+      return obj.map((item) => this.convertDatesToTimestamps(item));
+    } else {
+      // Iterate through each property in the object
+      for (const prop in obj) {
+        if (obj.hasOwnProperty(prop)) {
+          // Check if the property is an object
+          if (typeof obj[prop] === 'object' && obj[prop] !== null) {
+            // Recursively convert dates in nested objects
+            obj[prop] = this.convertDatesToTimestamps(obj[prop]);
+          } else if (prop.endsWith('Date') && obj[prop] instanceof Date) {
+            // Convert date fields to Firebase Timestamp
+            obj[prop] = Timestamp.fromDate(obj[prop]);
+          }
+        }
+      }
+
+    }
+    return obj;
+  }
+
 }

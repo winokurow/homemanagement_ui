@@ -23,12 +23,17 @@ export class DayService {
   private daySubscription: Subscription = Subscription.EMPTY;
 
   constructor(public firestore: AngularFirestore, public afAuth: AngularFireAuth) {
+    const currentDate = new Date();
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(currentDate.getDate() - 30);
+
     this.afAuth.authState.subscribe(state => {
       if (state?.uid) {
         this.userUid = state.uid;
         this.daySubscription = this.firestore.collection<any>(
           this.dbPath, ref => {
-            return ref.where('userId', '==', state.uid);
+            console.log(thirtyDaysAgo);
+            return ref.where('userId', '==', state.uid).where('dayDate', '>', Timestamp.fromDate(thirtyDaysAgo));
           }).snapshotChanges().subscribe(data => {
 
           this.dayList.next(data
@@ -43,7 +48,13 @@ export class DayService {
                 dayData.dayDate = dayData.day.toDate();
               }
 
-              dayData.resultEvents = dayData.resultEvents.map((event: DayEvent) => {
+              dayData.resultEvents = dayData.resultEvents.filter((event: DayEvent) => event).map((event: DayEvent) => {
+                if (!event.startTime) {
+                  event.startTime = new Date();
+                }
+                if (!event.endTime) {
+                  event.endTime = new Date();
+                }
                 if (event.startTime instanceof Timestamp) {
                   event.startTime = event.startTime.toDate();
                 }

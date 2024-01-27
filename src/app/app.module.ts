@@ -45,6 +45,7 @@ import {DaysSortPipe} from "./components/days/pipes/days-sort.pipe";
 import {DeleteConfirmModal} from "./shared/components/delete-dialog/delete-confirm.component";
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 import { RandomEventComponent } from './components/random/random-event/random-event.component';
+import {CustomSortPipe} from "./components/event-template/pipes/custom-sort-pipe";
 
 @NgModule({
   declarations: [
@@ -65,6 +66,7 @@ import { RandomEventComponent } from './components/random/random-event/random-ev
     EditEventComponent,
     CategoriesFilterPipePipe,
     DaysSortPipe,
+    CustomSortPipe,
     DeleteConfirmModal,
     RandomEventComponent
   ],

@@ -30,6 +30,24 @@ export class EventTemplateListComponent {
     console.log("this.selectedCategory" + this.selectedCategory);
   }
 
+  // Sorting function
+  customSort = (a: EventTemplate, b: EventTemplate): number => {
+    if (a.creationDate && b.creationDate) {
+      // If both objects have date, sort by date
+      return a.creationDate.getTime() - b.creationDate.getTime();
+    } else if (a.creationDate) {
+      // If only a has date, it comes first
+      return -1;
+    } else if (b.creationDate) {
+      // If only b has date, it comes first
+      return 1;
+    } else {
+      // If neither has date, sort by name
+      return a.name.localeCompare(b.name);
+    }
+  };
+
+
   clickAddEventTemplate() {
     this.router.navigate(['add-event-template/', this.selectedCategory]);
   }
