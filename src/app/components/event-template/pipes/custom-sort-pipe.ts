@@ -9,8 +9,8 @@ export class CustomSortPipe implements PipeTransform {
       return array;
     }
 
-    const sortedArray = array.slice().sort((a, b) => {
-      if (a["order"] && b["order"] && a["order"]!=b["order"]) {
+    return array.slice().sort((a, b) => {
+      if (a["order"] && b["order"] && a["order"] != b["order"]) {
         return a["order"] - b["order"];
       } else if (a["order"]) {
         return -1;
@@ -26,9 +26,9 @@ export class CustomSortPipe implements PipeTransform {
         return 1;
       }
 
-      return a["name"].localeCompare(b["name"]);
+      const aName = a["room"] ? a["room"] + '. ' + a["name"] : a["name"]
+      const bName = b["room"] ? b["room"] + '. ' + b["name"] : b["name"]
+      return aName.localeCompare(bName);
     });
-
-    return sortedArray;
   }
 }

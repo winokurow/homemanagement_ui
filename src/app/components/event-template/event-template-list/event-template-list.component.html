@@ -37,7 +37,7 @@
         <tbody>
         <tr *ngFor="let eventTemplate of (eventTemplateService.eventTemplateList | categoriesFilterPipe: selectedCategory | customSort)" class="center-align">
           <td class="col-sm-1">{{ eventTemplate.order }}</td>
-          <td class="col-sm-3">{{ eventTemplate.name }}</td>
+          <td class="col-sm-3">{{ eventTemplate.room ? eventTemplate.room + '. ' + eventTemplate.name : eventTemplate.name }}</td>
           <td class="col-sm-1">{{ eventTemplate.weight }}</td>
           <td class="col-sm-1">{{ eventTemplate.duration }}</td>
           <td class="col-sm-3">{{ eventTemplate.categories }}</td>
