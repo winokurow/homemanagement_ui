@@ -16,7 +16,10 @@ export class RandomEventComponent  implements OnInit {
   selectedEventTemplate: string = '';
   generatedNumber: number | null = null;
 
-  constructor(public eventTemplateService: EventTemplateService) { }
+  constructor(public eventTemplateService: EventTemplateService) {
+    // Add an empty option to the beginning of the array
+    this.selectCategoryOptions.unshift("");
+  }
 
   ngOnInit(): void {
     this.eventTemplateService.eventTemplateListSubject.subscribe((eventTemplateList: EventTemplate[]) => {
